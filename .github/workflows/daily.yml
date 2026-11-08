@@ -2,7 +2,10 @@ name: Daily Short
 
 on:
   schedule:
-    - cron: "17 3 * * *"   # 03:17 UTC = 08:47 IST, every day (GitHub may start it a few minutes late)
+    # 09:17 UTC = 14:47 IST daily. That's after the Gemini free-tier daily reset (midnight US
+    # Pacific), and it leaves ~4.5 h to review before the 19:30 IST scheduled go-live.
+    # GitHub may start scheduled runs a few minutes late.
+    - cron: "17 9 * * *"
   workflow_dispatch:
     inputs:
       dry_run:

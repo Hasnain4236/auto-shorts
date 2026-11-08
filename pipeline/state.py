@@ -234,6 +234,9 @@ class Ledger:
                 best = (score, entry)
         return best[1] if best[0] > threshold else None
 
+    def save(self) -> None:
+        atomic_write_json(self.path, self.entries)
+
     def append(self, entry: dict[str, Any]) -> None:
         entry = {"ts": utcnow(), **entry}
         self.entries.append(entry)

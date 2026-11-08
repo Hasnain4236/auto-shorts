@@ -68,14 +68,18 @@ and are never resumed by a real run. `RUNS_DIR` moves the runs folder (e.g. to G
 5. Run `.\.venv\Scripts\python scripts\get_youtube_token.py`, sign in with the **channel's**
    Google account, and allow access. It writes `YOUTUBE_REFRESH_TOKEN` into `.env`.
 
-**Public vs private (read this):** YouTube forces every video uploaded through the API by an
-*unaudited* project to **private**, and those videos stay locked private. To have the pipeline
-publish publicly by itself, apply for the free **YouTube API compliance audit**
-(https://support.google.com/youtube/contact/yt_api_form). Approval takes weeks. After it's
-approved, set `upload.auto_publish_after_audit: true`.
-Until then: each video arrives in Telegram as an MP4. Post it from the YouTube app (about a
-minute). The learning loop still finds it, because it matches your public upload to the
-ledger by title.
+**Publishing (`upload.publish_mode` in `config.yaml`):**
+- `scheduled` (default): the video is uploaded privately with a go-live time
+  (`publish_time`, 19:30 IST), and YouTube makes it public at that time. Telegram tells you
+  when, so you can watch it first. To stop one, set it to Private in Studio before then.
+- `public`: goes public the moment it's uploaded.
+- `private`: you publish everything yourself.
+
+YouTube can restrict API uploads from unaudited projects to private. That didn't happen
+on this channel: the first upload could be made public. If it ever does, the Telegram
+review says so, and `learn` alerts you about any scheduled video that didn't go live. The fix
+is the free **YouTube API compliance audit**
+(https://support.google.com/youtube/contact/yt_api_form).
 
 ### 2. Telegram review (2 minutes)
 
@@ -104,7 +108,7 @@ powershell -ExecutionPolicy Bypass -File scripts\setup_github.ps1
 It creates a **private** repo and pushes the project (`.env` is git-ignored). It copies your
 `.env` keys into GitHub's encrypted secrets, publishes the privacy-policy pages to a small public
 repo, and starts one dry run. After that, `.github/workflows/daily.yml` runs every day at
-08:47 IST:
+14:47 IST (after the Gemini daily quota resets), and the video goes live at 19:30 IST:
 
 `learn` (analytics) → `run` (make + upload) → prune → cache runs → commit the ledger.
 

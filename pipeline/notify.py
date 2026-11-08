@@ -52,7 +52,16 @@ def build_message(script: dict[str, Any], facts: dict[str, Any], uploads: list[d
     lines = [f"<b>🎬 New Short ready for review</b>{' (DRY RUN — not uploaded)' if dry_run else ''}",
              f"<b>{e(script['title'])}</b>", ""]
     for u in uploads:
-        lines.append(f"YouTube ({e(u['privacy'])}): {e(u['url'])}\nStudio: {e(u['studio_url'])}")
+        if u.get("problem"):
+            when = f"\u26a0\ufe0f {e(u['problem'])}. Publish it yourself in Studio."
+        elif u.get("publish_at_local"):
+            when = (f"\u23f0 Goes public automatically at <b>{e(u['publish_at_local'])}</b>. "
+                    "To stop it: Studio \u2192 Visibility \u2192 Private.")
+        elif u.get("privacy") == "public":
+            when = "\u2705 Public now."
+        else:
+            when = "\U0001f512 Private: publish it in Studio when ready."
+        lines.append(f"{when}\nYouTube: {e(u['url'])}\nStudio: {e(u['studio_url'])}")
     if qa:
         cards = qa.get("text_card_shots", 0)
         lines.append(f"QA passed · {next((c['value'] for c in qa['checks'] if c['name'] == 'duration'), '?')}s"

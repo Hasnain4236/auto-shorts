@@ -86,8 +86,14 @@ video:
 upload:
   youtube: true
   instagram: false
-  youtube_privacy: "private"
-  auto_publish_after_audit: false
+  # private   = upload privately; you publish it in Studio
+  # scheduled = upload privately with a go-live time; YouTube publishes it automatically,
+  #             and you can stop it in Studio before then (review window)
+  # public    = publish immediately
+  publish_mode: scheduled
+  publish_time: "19:30"          # local go-live time for scheduled mode (Indian evening prime time)
+  timezone: "Asia/Kolkata"
+  min_review_hours: 2            # less review time than this left today -> go live tomorrow instead
 
 review:
   telegram: true

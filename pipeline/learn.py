@@ -113,6 +113,28 @@ def video_statuses(yt: Any, ids: list[str]) -> dict[str, str]:
     return out
 
 
+def check_overdue(config: Config, ledger: Ledger, statuses: dict[str, str]) -> list[dict[str, Any]]:
+    """Scheduled videos whose go-live time has passed but are still not public -> one alert each."""
+    now = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+    overdue = [e for e in ledger.entries
+               if e.get("publish_at") and e["publish_at"] < now and e.get("youtube_id")
+               and statuses.get(e["youtube_id"]) not in ("public", None) and not e.get("overdue_alerted")]
+    if overdue:
+        from pipeline import notify
+
+        for e in overdue:
+            msg = (f"Scheduled Short is still {statuses.get(e['youtube_id'])} after its go-live time: "
+                   f"{e.get('title')} https://studio.youtube.com/video/{e['youtube_id']}/edit")
+            log.warning("learn: %s", msg)
+            try:
+                notify.send_alert(config, None, msg)
+            except Exception:
+                log.exception("learn: alert failed")
+            e["overdue_alerted"] = True
+        ledger.save()
+    return overdue
+
+
 def video_metrics(an: Any, vid: str, published: str) -> dict[str, Any]:
     start = published[:10]
     end = date.today().isoformat()
@@ -231,6 +253,7 @@ def run_learning(config: Config, llm_factory: Any = None) -> dict[str, Any]:
     uploads = channel_uploads(yt)
     ids = list({u["id"] for u in uploads} | {e["youtube_id"] for e in entries if e.get("youtube_id")})
     statuses = video_statuses(yt, ids)
+    check_overdue(config, ledger, statuses)
     link_videos(entries, uploads, statuses)
     published = {u["id"]: u["published"] for u in uploads}
 

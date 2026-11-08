@@ -4,6 +4,7 @@ python-dotenv>=1.0
 requests>=2.31
 google-genai>=1.0
 pytest>=8.0
+tzdata>=2024.1          # time-zone database for zoneinfo (Windows has none built in)
 
 # Phase 2 — content (trends/research)
 pytrends>=4.9
