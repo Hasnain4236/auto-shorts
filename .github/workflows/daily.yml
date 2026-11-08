@@ -2,10 +2,14 @@ name: Daily Short
 
 on:
   schedule:
-    # 09:17 UTC = 14:47 IST daily. That's after the Gemini free-tier daily reset (midnight US
-    # Pacific), and it leaves ~4.5 h to review before the 19:30 IST scheduled go-live.
+    # One Short per slot, up to channel.videos_per_day (config.yaml) per UTC day, so keep the
+    # number of lines here in step with it. Times are UTC (IST = UTC + 5:30). They're spread
+    # out so each Short gets its own audience instead of all of them landing at once.
     # GitHub may start scheduled runs a few minutes late.
-    - cron: "17 9 * * *"
+    - cron: "17 3 * * *"    # 08:47 IST
+    - cron: "47 7 * * *"    # 13:17 IST
+    - cron: "47 12 * * *"   # 18:17 IST
+    - cron: "47 15 * * *"   # 21:17 IST
   workflow_dispatch:
     inputs:
       dry_run:
@@ -23,7 +27,7 @@ concurrency:
 jobs:
   short:
     runs-on: ubuntu-latest
-    timeout-minutes: 120
+    timeout-minutes: 60
     env:
       PYTHONUNBUFFERED: "1"
       GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
@@ -54,48 +58,58 @@ jobs:
       - name: Install Python packages
         run: pip install -r requirements.txt
 
-      # Yesterday's runs folder: lets a failed run resume, and remembers which models
-      # hit their daily quota. The uploaded-topics ledger itself lives in git (data/).
+      # Earlier runs: lets a failed run resume in the next slot, and remembers which models
+      # hit their daily quota. Downloaded stock clips are left out (re-downloading them is
+      # quicker than caching them). The uploaded-topics ledger itself lives in git (data/).
       - name: Restore previous runs
         uses: actions/cache/restore@v4
         with:
-          path: runs
+          path: |
+            runs
+            !runs/_cache/footage
           key: runs-${{ github.run_id }}
           restore-keys: runs-
 
-      - name: Learn from YouTube analytics
+      - name: Learn from YouTube analytics (first run of the day only)
         continue-on-error: true
         run: python main.py learn
 
-      - name: Make today's Short
-        run: python main.py run ${{ inputs.dry_run && '--dry-run' || '' }}
+      - name: Make a Short
+        run: |
+          touch "$RUNNER_TEMP/started"
+          python main.py run ${{ inputs.dry_run && '--dry-run' || '' }}
+
+      - name: Find this job's run folder
+        if: always()
+        run: |
+          dir=$(find runs -mindepth 2 -maxdepth 2 -name state.json -newer "$RUNNER_TEMP/started" \
+                -printf '%T@ %h\n' 2>/dev/null | sort -n | tail -1 | cut -d' ' -f2-)
+          echo "RUN_DIR=${dir:-runs/none}" >> "$GITHUB_ENV"
 
       - name: Prune old runs
         if: always()
         run: python main.py prune --keep-days 3
 
-      - name: Save runs for tomorrow
+      - name: Save runs for the next slot
         if: always()
         uses: actions/cache/save@v4
         with:
-          path: runs
+          path: |
+            runs
+            !runs/_cache/footage
           key: runs-${{ github.run_id }}
 
-      - name: Find today's run folder
-        if: always()
-        run: echo "TODAY=$(date -u +%F)" >> "$GITHUB_ENV"
-
-      - name: Keep today's video as a download (7 days)
+      - name: Keep this video as a download (3 days)
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: short-${{ env.TODAY }}-${{ github.run_id }}
+          name: short-${{ github.run_id }}
           path: |
-            runs/${{ env.TODAY }}_*/final.mp4
-            runs/${{ env.TODAY }}_*/thumb.jpg
-            runs/${{ env.TODAY }}_*/*.json
-            runs/${{ env.TODAY }}_*/run.log
-          retention-days: 7
+            ${{ env.RUN_DIR }}/final.mp4
+            ${{ env.RUN_DIR }}/thumb.jpg
+            ${{ env.RUN_DIR }}/*.json
+            ${{ env.RUN_DIR }}/run.log
+          retention-days: 3
           if-no-files-found: ignore
 
       - name: Commit ledger and learning data
@@ -105,6 +119,6 @@ jobs:
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add data/
           if git diff --cached --quiet; then echo "No data changes"; exit 0; fi
-          git commit -m "data: daily ledger/analytics update"
+          git commit -m "data: ledger/analytics update"
           git pull --rebase --autostash
           git push

@@ -1,9 +1,9 @@
 """CLI for the auto-shorts pipeline.
 
-    python main.py run [--dry-run]            # resume today's unfinished run, or start a new one
+    python main.py run [--dry-run]            # make one video (resumes today's unfinished run first)
     python main.py resume <run_id>            # continue a specific run
     python main.py stage <name> [--run-id ID] [--force]
-    python main.py learn                      # pull analytics, update data/playbook.json
+    python main.py learn [--force]            # pull analytics, update data/playbook.json
     python main.py list                       # show runs and stage status
 """
 from __future__ import annotations
@@ -34,19 +34,31 @@ def _setup_logging(verbose: bool) -> None:
 
 
 def cmd_run(args: argparse.Namespace) -> int:
+    """Make ONE video (resuming today's unfinished run first), up to channel.videos_per_day.
+
+    CI calls this once per scheduled slot, so the day's videos are spread out. A run that
+    aborts (no topic survived research or fact-checking, or QA rejected the render) gets one
+    fresh retry; trends skips the topics the aborted run already tried."""
     config = load_config(args.config)
     target = int(config.get("channel.videos_per_day", 1))
     done = RunState.count_finished_today(config.runs_dir, dry_run=args.dry_run)
     if done >= target:
-        log.info("Already finished %d/%d run(s) today — nothing to do", done, target)
+        log.info("Already finished %d/%d videos today — nothing to do", done, target)
         return 0
-    for _ in range(target - done):
+    log.info("Making video %d of %d for today", done + 1, target)
+    for attempt in (1, 2):
         state = RunState.find_resumable(config.runs_dir, dry_run=args.dry_run)
         if state:
             log.info("Resuming run %s", state.run_id)
         else:
             state = RunState.create(config.runs_dir, dry_run=args.dry_run)
-        run_stages(config, state, simulate_failure=args.simulate_failure)
+        try:
+            run_stages(config, state, simulate_failure=args.simulate_failure)
+            return 0
+        except AbortRun:
+            if attempt == 2:
+                raise
+            log.warning("Run %s aborted; trying once more with a different topic", state.run_id)
     return 0
 
 
@@ -115,7 +127,7 @@ def cmd_learn(args: argparse.Namespace) -> int:
     from pipeline.llm import build_llm
 
     config = load_config(args.config)
-    run_learning(config, llm_factory=lambda: build_llm(config))
+    run_learning(config, llm_factory=lambda: build_llm(config), force=args.force)
     return 0
 
 
@@ -168,6 +180,7 @@ def build_parser() -> argparse.ArgumentParser:
     pr.set_defaults(func=cmd_prune)
 
     ln = sub.add_parser("learn", help="pull YouTube analytics and update the playbook")
+    ln.add_argument("--force", action="store_true", help="pull again even if it ran in the last learning.every_hours")
     ln.set_defaults(func=cmd_learn)
 
     ls = sub.add_parser("list", help="list runs")

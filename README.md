@@ -11,8 +11,8 @@ See [AUTO_SHORTS_BUILD_SPEC.md](AUTO_SHORTS_BUILD_SPEC.md) for the full brief.
 | 1 Skeleton | config, state/resume, llm wrapper, CLI | ✅ |
 | 2 Content | trends, research, script, factcheck | ✅ tested live |
 | 3 Media | tts, footage, captions, compose, qa | ✅ tested live (add music to `assets/music/`) |
-| 4 Distribution | upload, notify, ledger, learn | ✅ first private upload done (dwui52-Bc1A) |
-| 5 Automation | GitHub Actions, Colab | ✅ built; needs `scripts/setup_github.ps1` once |
+| 4 Distribution | upload, notify, ledger, learn | ✅ live: uploads go public directly |
+| 5 Automation | GitHub Actions, Colab | ✅ running: 4 Shorts a day on GitHub Actions |
 
 ## How it works
 
@@ -41,10 +41,10 @@ copy .env.example .env      # then fill in keys (see Setup)
 ## CLI
 
 ```
-python main.py run [--dry-run]                 # resume today's unfinished run, or start a new one
+python main.py run [--dry-run]                 # make one video (resumes today's unfinished run first)
 python main.py resume <run_id> [--force]       # continue a specific run (--force retries an aborted one)
 python main.py stage <name> [--run-id ID] [--force]
-python main.py learn                           # pull YouTube analytics, update data/playbook.json
+python main.py learn [--force]                 # pull YouTube analytics, update data/playbook.json
 python main.py list                            # ✓ done  ✗ failed  … running  ! aborted  · pending
 ```
 
@@ -69,10 +69,10 @@ and are never resumed by a real run. `RUNS_DIR` moves the runs folder (e.g. to G
    Google account, and allow access. It writes `YOUTUBE_REFRESH_TOKEN` into `.env`.
 
 **Publishing (`upload.publish_mode` in `config.yaml`):**
-- `scheduled` (default): the video is uploaded privately with a go-live time
-  (`publish_time`, 19:30 IST), and YouTube makes it public at that time. Telegram tells you
-  when, so you can watch it first. To stop one, set it to Private in Studio before then.
-- `public`: goes public the moment it's uploaded.
+- `public` (default): goes public the moment it's uploaded, and Telegram gets the same video
+  with its link a few seconds later. To take one down: Studio → Visibility → Private.
+- `scheduled`: the video is uploaded privately with a go-live time (`publish_time`,
+  19:30 IST), and YouTube makes it public then. This gives you a window to stop it first.
 - `private`: you publish everything yourself.
 
 YouTube can restrict API uploads from unaudited projects to private. That didn't happen
@@ -107,14 +107,20 @@ powershell -ExecutionPolicy Bypass -File scripts\setup_github.ps1
 
 It creates a **private** repo and pushes the project (`.env` is git-ignored). It copies your
 `.env` keys into GitHub's encrypted secrets and starts one dry run. Nothing public is created.
-After that, `.github/workflows/daily.yml` runs every day at
-14:47 IST (after the Gemini daily quota resets), and the video goes live at 19:30 IST:
+After that, `.github/workflows/daily.yml` makes one Short per slot, four times a day
+(08:47, 13:17, 18:17 and 21:17 IST), and each goes public as soon as it's uploaded:
 
-`learn` (analytics) → `run` (make + upload) → prune → cache runs → commit the ledger.
+`learn` (first slot of the day only) → `run` (make + upload one video) → prune → cache runs →
+commit the ledger.
 
-A failed day resumes from the failed stage on the next run and sends a Telegram alert. Each
-day's video is also kept as a downloadable artifact for 7 days. Change the time in the `cron:` line.
-Run on demand: GitHub → Actions → Daily Short → Run workflow.
+How many a day: `channel.videos_per_day` in `config.yaml` is the cap, and the `cron:` lines are
+the slots. Change both together. The slots are spread out on purpose: back to back, four
+videos would land within an hour and compete for the same first viewers.
+
+A failed run resumes from the failed stage in the next slot and sends a Telegram alert. A run
+that aborts (no topic survives research or fact-checking, or QA rejects the render) gets one
+fresh retry with a different topic. Each video is also kept as a downloadable artifact for
+3 days. Run one extra on demand: GitHub → Actions → Daily Short → Run workflow (still capped).
 
 After a new YouTube sign-in, update the secret with
 `.\.venv\Scripts\python scripts\push_secrets.py <you>/auto-shorts`.
@@ -179,10 +185,11 @@ Shorts performance is noisy. Treat the playbook as a hint until there are ~20 vi
 
 | Service | Limit | Use per video |
 |---|---|---|
+| GitHub Actions (private repo) | 2,000 minutes/month | ~10 min (4/day ≈ 1,200 min/month) |
 | Gemini | ~20 requests/day **per model** (4 models chained) | ~5–8 |
 | OpenRouter free models (Nemotron) | ~50 requests/day per account | 1–3 (writer) |
 | Groq | generous | 1–3 (checker) |
-| YouTube Data API | 10,000 units/day | upload + a few reads |
+| YouTube Data API | 10,000 units/day | one upload (1,600 units at most) + a few reads |
 | Pixabay | 100 requests/minute | ~20 |
 
 Models that hit a daily limit are skipped automatically until the quota resets.

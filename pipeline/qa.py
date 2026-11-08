@@ -11,14 +11,15 @@ from pathlib import Path
 from typing import Any
 
 from pipeline.media import black_segments, probe, silences
-from pipeline.stages import StageContext
+from pipeline.stages import AbortRun, StageContext
 from pipeline.state import atomic_write_json, read_json
 
 log = logging.getLogger(__name__)
 
 
-class QAFailed(RuntimeError):
-    pass
+class QAFailed(AbortRun):
+    """A rejected render aborts the run instead of failing it: resuming would only re-check
+    the same file, and a failed run would block the day's later runs from starting fresh."""
 
 
 def run(ctx: StageContext) -> list[Path]:

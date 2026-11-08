@@ -46,3 +46,20 @@ def test_manual_reupload_is_linked_by_title():
 
 def test_playbook_prompt_empty_without_data(tmp_path):
     assert learn.playbook_prompt(_cfg(tmp_path), "script") == ""
+
+
+def test_learn_runs_once_a_day(tmp_path, monkeypatch):
+    from datetime import datetime, timedelta, timezone
+
+    cfg = _cfg(tmp_path)
+    now = datetime(2026, 11, 9, 12, 0, tzinfo=timezone.utc)
+    assert learn.learned_recently(cfg, now) is None  # never pulled
+    atomic_write_json(tmp_path / "performance.json", {"updated": (now - timedelta(hours=5)).isoformat()})
+    assert learn.learned_recently(cfg, now)  # pulled 5 h ago: later runs today skip it
+    assert learn.learned_recently(cfg, now + timedelta(hours=16)) is None  # next day's first run pulls again
+
+    # a skipped pull never touches the YouTube APIs
+    atomic_write_json(tmp_path / "performance.json",
+                      {"updated": (datetime.now(timezone.utc) - timedelta(hours=1)).isoformat(timespec="seconds")})
+    monkeypatch.setattr("pipeline.youtube_api.data_api", lambda: (_ for _ in ()).throw(AssertionError("called")))
+    assert learn.run_learning(cfg) == {}

@@ -20,7 +20,7 @@ from __future__ import annotations
 import logging
 import math
 import random
-from datetime import date, datetime, timezone
+from datetime import date, datetime, timedelta, timezone
 from pathlib import Path
 from typing import Any
 
@@ -241,9 +241,25 @@ def write_playbook(config: Config, rows: list[dict[str, Any]], llm: Any) -> dict
     return llm.complete_json(PLAYBOOK_PROMPT.format(niche=config.get("channel.niche"), table=table), temperature=0.3)
 
 
-def run_learning(config: Config, llm_factory: Any = None) -> dict[str, Any]:
+def learned_recently(config: Config, now: datetime | None = None) -> str | None:
+    """When analytics were last pulled, if within learning.every_hours (else None).
+
+    Several runs a day all start with `learn`; analytics only change daily, so only the
+    first run of the day pulls them (and spends the playbook LLM call)."""
+    path = data_path(config, "performance.json")
+    last = read_json(path).get("updated") if path.exists() else None
+    if not last:
+        return None
+    age = (now or datetime.now(timezone.utc)) - datetime.fromisoformat(last)
+    return last if age < timedelta(hours=float(config.get("learning.every_hours", 20))) else None
+
+
+def run_learning(config: Config, llm_factory: Any = None, force: bool = False) -> dict[str, Any]:
     from pipeline.youtube_api import analytics_api, data_api
 
+    if not force and (last := learned_recently(config)):
+        log.info("learn: analytics already pulled at %s; skipping (use --force to pull again)", last)
+        return {}
     ledger = Ledger(config.ledger_path)
     entries = [e for e in ledger.entries if e.get("title")]
     if not entries:

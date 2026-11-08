@@ -13,6 +13,7 @@ from __future__ import annotations
 import logging
 import xml.etree.ElementTree as ET
 from dataclasses import asdict, dataclass, field
+from datetime import date, timedelta
 from pathlib import Path
 from typing import Any
 
@@ -20,7 +21,7 @@ from pipeline import http
 from pipeline.config import Config, env
 from pipeline.learn import playbook_prompt
 from pipeline.stages import AbortRun, StageContext
-from pipeline.state import Ledger, atomic_write_json, similarity
+from pipeline.state import ABORTED, Ledger, RunState, atomic_write_json, read_json, similarity
 
 log = logging.getLogger(__name__)
 
@@ -286,10 +287,32 @@ def evergreen_candidates(ctx: StageContext, ledger: Ledger) -> list[Candidate]:
     return out
 
 
-def rank(cands: list[Candidate], ledger: Ledger, min_relevance: float, dup_threshold: float) -> list[Candidate]:
+def recently_failed_titles(ctx: StageContext, days: int = 2) -> set[str]:
+    """Topics that recent aborted runs couldn't turn into a video (too few sources, failed
+    fact-check, rejected render). Runs on the same day see the same trends, so without this
+    every new run would walk into the same dead end."""
+    cutoff = (date.today() - timedelta(days=days)).isoformat()
+    titles: set[str] = set()
+    for r in RunState.list_runs(ctx.config.runs_dir):
+        if r.status != ABORTED or r.data.get("date", "") < cutoff or r.run_id == ctx.state.run_id:
+            continue
+        path = r.run_dir / "topics.json"
+        if path.exists():
+            topics = read_json(path)
+            titles.update(x.get("title", "") for x in topics.get("rejected", []))
+            titles.add((topics.get("selected") or {}).get("title", ""))
+    titles.discard("")
+    return titles
+
+
+def rank(cands: list[Candidate], ledger: Ledger, min_relevance: float, dup_threshold: float,
+         skip: set[str] | frozenset[str] = frozenset()) -> list[Candidate]:
     ok = []
     for c in sorted(cands, key=lambda c: -c.score):
         if c.niche_relevance < min_relevance:
+            continue
+        if c.title in skip:
+            log.info("trends: skipping '%s' (a recent run already failed with it)", c.title)
             continue
         dup = ledger.find_duplicate(c.angle or c.title, dup_threshold) or ledger.find_duplicate(c.title, dup_threshold)
         if dup:
@@ -308,11 +331,12 @@ def run(ctx: StageContext) -> list[Path]:
     raw = collect_all(cfg, ctx)
     cands = dedupe(raw, dup_t)
     log.info("trends: %d raw -> %d after dedupe", len(raw), len(cands))
-    ranked = rank(score_candidates(ctx, cands), ledger, min_rel, dup_t) if cands else []
+    failed = recently_failed_titles(ctx)
+    ranked = rank(score_candidates(ctx, cands), ledger, min_rel, dup_t, failed) if cands else []
 
     if not ranked and cfg.get("trends.evergreen_fallback", True):
         log.warning("trends: no in-niche trending topic today; falling back to evergreen topics")
-        ranked = rank(evergreen_candidates(ctx, ledger), ledger, min_rel, dup_t)
+        ranked = rank(evergreen_candidates(ctx, ledger), ledger, min_rel, dup_t, failed)
     if not ranked:
         raise AbortRun("No in-niche, non-duplicate topic found today")
 

@@ -6,7 +6,7 @@ import pytest
 
 import main
 from pipeline.stages import STAGES, placeholder
-from pipeline.state import COMPLETE, FAILED, RunState
+from pipeline.state import ABORTED, COMPLETE, FAILED, RunState
 
 
 OFFLINE_OUTPUTS = {
@@ -48,9 +48,41 @@ def test_dry_run_completes_and_renames(runs_dir: Path):
     assert run.run_id.endswith("_dry-run-placeholder-topic")
     assert all(run.is_done(s) for s in STAGES)
     assert (run.run_dir / "run.log").exists()
-    # second invocation is a no-op: today's quota of videos is done
+
+
+def test_one_video_per_run_up_to_the_daily_cap(runs_dir: Path):
+    from pipeline.config import load_config
+
+    target = int(load_config().get("channel.videos_per_day", 1))
+    for n in range(1, target + 1):
+        assert main.main(["run", "--dry-run"]) == 0
+        assert len(RunState.list_runs(runs_dir)) == n  # each invocation makes exactly one
+    assert main.main(["run", "--dry-run"]) == 0  # cap reached: no-op
+    runs = RunState.list_runs(runs_dir)
+    assert len(runs) == target and all(r.status == COMPLETE for r in runs)
+
+
+def test_aborted_run_gets_one_fresh_retry(runs_dir: Path, monkeypatch):
+    from pipeline import research
+    from pipeline.stages import AbortRun
+
+    real = research.run
+    calls = []
+
+    def flaky(ctx):
+        calls.append(ctx.state.run_id)
+        if len(calls) == 1:
+            raise AbortRun("only 2 verifiable facts")
+        return real(ctx)
+
+    monkeypatch.setattr(research, "run", flaky)
     assert main.main(["run", "--dry-run"]) == 0
-    assert len(RunState.list_runs(runs_dir)) == 1
+    assert sorted(r.status for r in RunState.list_runs(runs_dir)) == sorted([ABORTED, COMPLETE])
+
+    # two aborts in a row: give up for this slot (exit 3), the next slot tries again
+    monkeypatch.setattr(research, "run", lambda ctx: (_ for _ in ()).throw(AbortRun("no topic")))
+    assert main.main(["run", "--dry-run"]) == 3
+    assert [r.status for r in RunState.list_runs(runs_dir)].count(ABORTED) == 3
 
 
 def test_crash_then_resume_skips_finished_stages(runs_dir: Path):

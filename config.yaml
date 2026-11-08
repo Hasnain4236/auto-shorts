@@ -9,7 +9,11 @@ channel:
     background, watching on a phone and deciding within 1–2 seconds whether to keep
     watching or swipe away.
   tone: "curious, clear, punchy, no hype, never clickbait lies"
-  videos_per_day: 1
+  # Daily cap. Each `main.py run` makes ONE video; GitHub Actions runs it once per slot
+  # (the cron lines in .github/workflows/daily.yml), so keep the two in step. 4/day fits the
+  # free limits: ~10 GitHub Actions minutes per video (2,000/month on a private repo) and
+  # ~6 Gemini calls per video.
+  videos_per_day: 4
 
 content:
   target_words: [130, 160]   # spoken words across hook + beats + cta (~2.7 words/s)
@@ -89,8 +93,8 @@ upload:
   # private   = upload privately; you publish it in Studio
   # scheduled = upload privately with a go-live time; YouTube publishes it automatically,
   #             and you can stop it in Studio before then (review window)
-  # public    = publish immediately
-  publish_mode: scheduled
+  # public    = publish immediately (Telegram gets the same video with its link right after)
+  publish_mode: public
   publish_time: "19:30"          # local go-live time for scheduled mode (Indian evening prime time)
   timezone: "Asia/Kolkata"
   min_review_hours: 2            # less review time than this left today -> go live tomorrow instead
@@ -102,6 +106,7 @@ learning:
   min_age_days: 3        # analytics need a few days to settle
   min_videos: 6          # public videos needed before the LLM writes a playbook
   explore_rate: 0.3      # share of videos that try a non-best hook style
+  every_hours: 20        # analytics change daily, so later runs on the same day skip `learn`
 
 paths:
   runs_dir: "runs"                       # overridden by RUNS_DIR env var (e.g. Google Drive in Colab)

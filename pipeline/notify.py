@@ -49,7 +49,9 @@ def send_text(token: str, chat: str, text: str) -> None:
 def build_message(script: dict[str, Any], facts: dict[str, Any], uploads: list[dict[str, Any]],
                   dry_run: bool, qa: dict[str, Any] | None) -> str:
     e = html.escape
-    lines = [f"<b>🎬 New Short ready for review</b>{' (DRY RUN — not uploaded)' if dry_run else ''}",
+    live = any(u.get("privacy") == "public" and not u.get("problem") for u in uploads)
+    lines = [f"<b>🎬 New Short {'is live' if live else 'ready for review'}</b>"
+             f"{' (DRY RUN — not uploaded)' if dry_run else ''}",
              f"<b>{e(script['title'])}</b>", ""]
     for u in uploads:
         if u.get("problem"):

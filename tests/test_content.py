@@ -206,3 +206,20 @@ def test_ledger_blocks_repeat_topic(ctx):
     cand = trends.Candidate(title="sky blue", source="x", niche_relevance=0.9,
                             angle="Why is the sky blue and not violet", score=0.9)
     assert trends.rank([cand], Ledger(c.config.ledger_path), 0.7, 0.85) == []
+
+
+def test_topics_from_aborted_runs_are_skipped(ctx):
+    """Several runs a day see the same trends; a new run must not repeat an aborted run's dead end."""
+    c = ctx()
+    dead = RunState.create(c.config.runs_dir)
+    (dead.run_dir / "topics.json").write_text(json.dumps({
+        "candidates": [], "selected": {"title": "failed factcheck"}, "rejected": [{"title": "too few facts"}]}))
+    dead.mark_aborted("factcheck", "claims unsupported")
+    alive = RunState.create(c.config.runs_dir)  # unfinished runs don't count: they get resumed
+    (alive.run_dir / "topics.json").write_text(json.dumps({"candidates": [], "selected": {"title": "in progress"}}))
+
+    skip = trends.recently_failed_titles(c)
+    assert skip == {"failed factcheck", "too few facts"}
+    cands = [trends.Candidate(title=t, source="x", niche_relevance=0.9, score=s)
+             for t, s in (("failed factcheck", 0.9), ("too few facts", 0.8), ("fresh topic", 0.5))]
+    assert [x.title for x in trends.rank(cands, Ledger(c.config.ledger_path), 0.7, 0.85, skip)] == ["fresh topic"]
