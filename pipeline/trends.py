@@ -209,13 +209,18 @@ how or why something works. A trend can qualify through a science/tech angle
 (e.g. a cricket match trending -> "why does a cricket ball swing?") but only if that angle is
 genuinely interesting, not forced.
 
+The channel has ALREADY covered these questions. Give each item an angle that is a genuinely
+different question; if the only good angle would repeat one of them, mark it "covered":
+{covered}
+
 Return JSON: {{"items": [{{
   "i": <item number>,
   "niche_relevance": <0–1, how well the best explainer angle fits the niche>,
   "hook_potential": <0–1, how likely a casual viewer stops scrolling: surprise, everyday relevance, "wait, what?">,
   "angle": "<the single question the video answers, max 15 words>",
   "search_queries": ["<2–3 Wikipedia-style search terms for researching the angle>"],
-  "avoid": <true if it touches the avoid list or is about a specific real private person>
+  "avoid": <true if it touches the avoid list or is about a specific real private person>,
+  "covered": <true if the best angle basically repeats an already-covered question>
 }}]}}
 Include every item.
 {playbook}
@@ -223,7 +228,13 @@ Items:
 {items}"""
 
 
-def score_candidates(ctx: StageContext, cands: list[Candidate]) -> list[Candidate]:
+def covered_topics(ledger: Ledger, n: int = 40) -> str:
+    """The channel's recent questions, for prompts. Fuzzy string matching misses rewordings
+    ("video games simulate car crashes" vs "BeamNG.Drive simulate crashes"); the model doesn't."""
+    return "; ".join(e.get("topic", "") for e in ledger.entries[-n:] if e.get("topic")) or "none"
+
+
+def score_candidates(ctx: StageContext, cands: list[Candidate], covered: str = "none") -> list[Candidate]:
     cfg = ctx.config
     limit = int(cfg.get("trends.max_candidates_scored", 60))
     batch = cands[:limit]
@@ -235,7 +246,7 @@ def score_candidates(ctx: StageContext, cands: list[Candidate]) -> list[Candidat
         SCORE_PROMPT.format(
             niche=cfg.get("channel.niche"), audience=cfg.get("channel.audience"),
             avoid=", ".join(cfg.get("content.avoid", [])), items=lines,
-            playbook=playbook_prompt(cfg, "topics"),
+            playbook=playbook_prompt(cfg, "topics"), covered=covered,
         ),
         system=SCORE_SYSTEM, temperature=0.2,
     )
@@ -244,6 +255,9 @@ def score_candidates(ctx: StageContext, cands: list[Candidate]) -> list[Candidat
     for i, c in enumerate(batch):
         r = by_i.get(i)
         if not r or r.get("avoid"):
+            continue
+        if r.get("covered"):
+            log.info("trends: skipping '%s' (repeats a covered question: %s)", c.title, r.get("angle", ""))
             continue
         c.niche_relevance = float(r.get("niche_relevance", 0))
         c.hook_potential = float(r.get("hook_potential", 0))
@@ -266,7 +280,7 @@ Return JSON: {{"topics": [{{"title": "<topic>", "angle": "<question the video an
 
 def evergreen_candidates(ctx: StageContext, ledger: Ledger) -> list[Candidate]:
     cfg = ctx.config
-    covered = "; ".join(e.get("topic", "") for e in ledger.entries[-40:]) or "none"
+    covered = covered_topics(ledger)
     result = ctx.llm.complete_json(
         EVERGREEN_PROMPT.format(
             niche=cfg.get("channel.niche"), audience=cfg.get("channel.audience"),
@@ -332,7 +346,7 @@ def run(ctx: StageContext) -> list[Path]:
     cands = dedupe(raw, dup_t)
     log.info("trends: %d raw -> %d after dedupe", len(raw), len(cands))
     failed = recently_failed_titles(ctx)
-    ranked = rank(score_candidates(ctx, cands), ledger, min_rel, dup_t, failed) if cands else []
+    ranked = rank(score_candidates(ctx, cands, covered_topics(ledger)), ledger, min_rel, dup_t, failed) if cands else []
 
     if not ranked and cfg.get("trends.evergreen_fallback", True):
         log.warning("trends: no in-niche trending topic today; falling back to evergreen topics")

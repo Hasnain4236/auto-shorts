@@ -97,6 +97,11 @@ video:
   voice_rate_pct: 25            # starting speed; auto-adjusted to fit duration_s
   music_dir: "assets/music"     # royalty-free tracks I add
   font: "assets/fonts/Inter-Bold.ttf"
+  # Animated graphics for number / comparison / process beats instead of stock footage
+  # (pipeline/graphics.py). Numbers in a graphic must be ones the facts state; a graphic that
+  # breaks the rules is dropped (that beat gets stock footage), never fatal.
+  graphics: true
+  max_graphics: 2
 
 upload:
   youtube: true

@@ -10,6 +10,10 @@ picks the best fit or rejects them all (stock tags alone are too loose: a "spark
 query returns dogs in sweaters). No vision model -> tag matching. Nothing fits -> text card.
 Clips are downloaded into a shared cache; attribution is stored per shot.
 
+Graphics (video.graphics): a beat the writer gave a "graphic" (a number, comparison or
+process) gets an animated graphic instead of stock, on the shot where the number is spoken
+(pipeline/graphics.py).
+
 Outputs: clips/ (shot media), footage.json
 """
 from __future__ import annotations
@@ -20,7 +24,7 @@ import shutil
 from pathlib import Path
 from typing import Any
 
-from pipeline import http
+from pipeline import graphics, http
 from pipeline.cards import render_card
 from pipeline.config import env
 from pipeline.llm import LLMError
@@ -35,7 +39,34 @@ PREFERRED_MAX_BYTES = 40_000_000
 MAX_DOWNLOAD_BYTES = 150_000_000
 
 
-def build_shots(script: dict[str, Any], timing: dict[str, Any]) -> list[dict[str, Any]]:
+NUMBER_WORDS = {"half", "double", "twice", "hundred", "thousand", "million", "billion", "trillion", "percent"}
+
+
+def _number_word(words: list[dict[str, Any]], segment: str) -> dict[str, Any] | None:
+    """The first spoken word in a beat that carries a number (digits or a number word)."""
+    for w in words:
+        token = re.sub(r"[^\w.]", "", str(w.get("text", "")).lower())
+        if w.get("segment") == segment and (any(ch.isdigit() for ch in token) or token in NUMBER_WORDS):
+            return w
+    return None
+
+
+def _attach_graphic(beat_shots: list[dict[str, Any]], graphic: dict[str, Any], segment: str,
+                    words: list[dict[str, Any]]) -> None:
+    """Put the beat's graphic on the shot where its number is spoken, and start the count there
+    (early enough that the ~1.1 s count-up still finishes inside the shot). Steps have no number
+    to wait for: they start the beat."""
+    w = _number_word(words, segment) if graphic.get("type") != "steps" else None
+    shot = next((s for s in beat_shots if w and s["start"] <= w["start"] < s["end"]), beat_shots[0])
+    shot["graphic"] = graphic
+    if w and shot["start"] <= w["start"] < shot["end"]:
+        latest = max(0.2, shot["end"] - shot["start"] - 1.3)
+        shot["graphic_at"] = round(min(max(0.2, w["start"] - shot["start"] - 0.1), latest), 2)
+    else:
+        shot["graphic_at"] = 0.3
+
+
+def build_shots(script: dict[str, Any], timing: dict[str, Any], graphics: bool = False) -> list[dict[str, Any]]:
     segs = {s["name"]: s for s in timing["segments"]}
     words = timing.get("words", [])
     beats = script["beats"]
@@ -50,6 +81,7 @@ def build_shots(script: dict[str, Any], timing: dict[str, Any]) -> list[dict[str
         start = seg["start"]
         end = total if i == len(beats) else seg["slot_end"]  # the cta rides on the last beat
         kws = list(b.get("visual_keywords") or [b.get("on_screen_text", "science")])
+        first = len(shots)
         if end - start > SPLIT_OVER_S and len(kws) >= 2:
             mid = (start + end) / 2
             seg_words = [w for w in words if w["segment"] == f"beat{i}" and start + 1.5 < w["start"] < end - 1.5]
@@ -58,6 +90,8 @@ def build_shots(script: dict[str, Any], timing: dict[str, Any]) -> list[dict[str
             shots.append({"slot": f"beat{i}b", "start": cut, "end": end, "keywords": kws[1:] + kws[:1], "on_screen_text": b.get("on_screen_text", "")})
         else:
             shots.append({"slot": f"beat{i}", "start": start, "end": end, "keywords": kws, "on_screen_text": b.get("on_screen_text", "")})
+        if graphics and isinstance(b.get("graphic"), dict):
+            _attach_graphic(shots[first:], b["graphic"], f"beat{i}", words)
     for s in shots:
         s["start"], s["end"] = round(s["start"], 3), round(s["end"], 3)
     return shots
@@ -302,12 +336,28 @@ def run(ctx: StageContext) -> list[Path]:
     cache = cfg.runs_dir / "_cache" / "footage"
     cache.mkdir(parents=True, exist_ok=True)
     font = font_path(cfg)
+    fps = int(cfg.get("video.fps", 30))
 
-    shots = build_shots(script, timing)
-    chosen = select_footage(ctx, shots, timing.get("words", []), script["title"])
+    shots = build_shots(script, timing, graphics=bool(cfg.get("video.graphics", False)))
+    # graphics are drawn, not searched: only the other shots go to the stock search
+    stock = [n for n, s in enumerate(shots) if not s.get("graphic")]
+    found = select_footage(ctx, [shots[n] for n in stock], timing.get("words", []), script["title"]) if stock else {}
+    chosen = {n: found.get(k) for k, n in enumerate(stock)}
     for n, shot in enumerate(shots):
         need = shot["end"] - shot["start"]
-        picked = chosen[n]
+        if shot.get("graphic"):
+            dest = clips_dir / f"{n:02d}_{shot['slot']}.mp4"
+            try:
+                # a little longer than the shot, so compose never has to loop it
+                graphics.render(shot["graphic"], dest, need + 0.5, fps, font, palette_idx=n,
+                                start_at=shot.get("graphic_at", 0.3))
+                shot.update(kind="graphic", file=dest.name, attribution=None)
+                log.info("footage: %-7s %.1fs graphic: %s", shot["slot"], need, graphics.spec_text(shot["graphic"]))
+                continue
+            except Exception as e:
+                log.warning("footage: graphic for %s failed (%s); using a text card", shot["slot"], e)
+            chosen[n] = None
+        picked = chosen.get(n)
         if picked:
             try:
                 cached = download(picked["url"], cache / f"{picked['id']}.mp4")

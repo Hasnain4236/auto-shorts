@@ -22,6 +22,7 @@ import re
 from pathlib import Path
 from typing import Any
 
+from pipeline import graphics as gfx
 from pipeline.config import Config
 from pipeline.learn import HOOK_TYPES, choose_arm, playbook_prompt
 from pipeline.llm import LLMError
@@ -94,7 +95,7 @@ FORMAT RULES:
   2–3 words each, concrete nouns, no abstract ideas ("energy states", "regulations"),
   no names of real people or brands. Order from most to least specific.
 - fact_ids: the fact ids each beat relies on. Every factual statement needs one.
-- title: max 70 characters, curiosity-driven but literally true. No ALL CAPS, no "SHOCKING".
+{graphics}- title: max 70 characters, curiosity-driven but literally true. No ALL CAPS, no "SHOCKING".
 - Never use: {banned}.
 
 Return JSON:
@@ -121,8 +122,72 @@ Previous draft:
 {previous}"""
 
 
+GRAPHICS_RULES = """- graphic (optional, max {max_graphics} per video): when a beat's main point is a number, a
+  comparison or a short process, add a "graphic" to that beat. The video then shows an
+  animated graphic of exactly that instead of stock footage, so the viewer SEES the number
+  as it is spoken. Use only numbers the facts state, written in digits ("2.2", not "two
+  point two"), and labels of max 4 words. Pick the type that fits:
+    counter: ONE striking number.
+      {{"type": "counter", "value": "2.2", "unit": "GW", "label": "one AI data center"}}
+    compare: TWO amounts of the same kind, in the same unit (drawn as bars on one scale).
+      {{"type": "compare", "items": [{{"label": "Normal rack", "value": 10, "unit": "kW"}},
+                                     {{"label": "AI rack", "value": 60, "unit": "kW"}}]}}
+    percent: a share of a whole.
+      {{"type": "percent", "value": 70, "label": "of Earth is ocean"}}
+    steps: a short cause-and-effect chain, 2-4 steps.
+      {{"type": "steps", "items": ["Sunlight hits air", "Blue scatters most", "Sky looks blue"]}}
+  It goes inside the beat object: {{"role": ..., "narration": ..., ..., "graphic": {{...}}}}.
+  Leave "graphic" out of every other beat.
+"""
+
+
+_GRAPHIC_ISSUE = re.compile(r"^(beat \d+ graphic|\d+ beats have a graphic)")
+
+
+def drop_bad_graphics(draft: dict[str, Any], issues: list[str], max_graphics: int) -> bool:
+    """Graphics are optional: if they're the ONLY problem, drop the bad ones (those beats get
+    stock footage) instead of failing or rewriting the script. True if it dropped anything."""
+    if not issues or not all(_GRAPHIC_ISSUE.match(i) for i in issues):
+        return False
+    bad = {int(m.group(1)) for i in issues if (m := re.match(r"^beat (\d+) graphic", i))}
+    kept = 0
+    for n, b in enumerate(draft.get("beats") or [], start=1):
+        if not isinstance(b, dict) or b.get("graphic") is None:
+            continue
+        if n in bad or kept >= max_graphics:
+            b.pop("graphic", None)
+        else:
+            kept += 1
+    log.warning("script: dropped unusable graphic(s): %s", "; ".join(issues))
+    return True
+
+
+def _drop_graphics_unless_enabled(draft: dict[str, Any], config: Config) -> dict[str, Any]:
+    """With video.graphics off, a stray "graphic" from the model is ignored, not validated."""
+    if not config.get("video.graphics", False):
+        for b in draft.get("beats") or []:
+            if isinstance(b, dict):
+                b.pop("graphic", None)
+    return draft
+
+
 def word_count(text: str) -> int:
     return len(re.findall(r"[\w'’%-]+", text))
+
+
+def numbers_in(text: str) -> set[str]:
+    """Numbers as written, normalised for comparison: "1,000" -> "1000", "2.20" -> "2.2"."""
+    out = set()
+    for n in re.findall(r"\d[\d,.]*", text):
+        n = n.replace(",", "").rstrip(".")
+        if "." in n:
+            n = n.rstrip("0").rstrip(".")
+        out.add(n)
+    return out
+
+
+def stated_numbers(facts: list[dict[str, Any]]) -> set[str]:
+    return numbers_in(" ".join(str(f.get("fact", "")) for f in facts))
 
 
 def spoken_text(script: dict[str, Any]) -> str:
@@ -130,8 +195,10 @@ def spoken_text(script: dict[str, Any]) -> str:
                     + [script.get("cta", "")]).strip()
 
 
-def validate(script: dict[str, Any], config: Config, fact_ids: set[str]) -> list[str]:
-    """Return a list of human-readable problems (empty = valid)."""
+def validate(script: dict[str, Any], config: Config, fact_ids: set[str],
+             stated: set[str] | None = None) -> list[str]:
+    """Return a list of human-readable problems (empty = valid). `stated`: numbers the facts
+    state; a graphic may only show those."""
     p: list[str] = []
     min_w, max_w = config.get("content.target_words", [130, 160])
     min_b, max_b = config.get("content.beats", [5, 7])
@@ -181,6 +248,18 @@ def validate(script: dict[str, Any], config: Config, fact_ids: set[str]) -> list
             p.append(f"beat {i} cites unknown fact ids {unknown}")
         if b.get("role") in ("mechanism", "payoff") and not b.get("fact_ids"):
             p.append(f"beat {i} ({b.get('role')}) makes claims but cites no fact_ids")
+        if b.get("graphic") is not None:
+            p += [f"beat {i} graphic: {issue}" for issue in gfx.validate_spec(b["graphic"])]
+            if stated is not None and isinstance(b["graphic"], dict):
+                unsourced = numbers_in(gfx.spec_text(b["graphic"])) - stated
+                if unsourced:
+                    p.append(f"beat {i} graphic shows numbers no fact states ({', '.join(sorted(unsourced))}); "
+                             "use the facts' numbers exactly")
+
+    max_graphics = int(config.get("video.max_graphics", 2))
+    n_graphics = sum(1 for b in beats if b.get("graphic") is not None)
+    if n_graphics > max_graphics:
+        p.append(f"{n_graphics} beats have a graphic; use at most {max_graphics}")
 
     long_words = sorted({w for w in re.findall(r"[A-Za-z]{13,}", spoken_text(script))})
     if len(long_words) > 3:
@@ -226,9 +305,11 @@ Return the same JSON object, changing ONLY the flagged lines:
 - Fix each flagged line with the smallest change that makes it true to the facts: correct or
   soften the wording, or swap in a different supported fact. Keep it spoken, punchy and plain.
 - Copy every other field exactly as it is (hook, the other beats, roles, visual_keywords,
-  title, tags, cta) unless a problem names it. Don't add new teasers, claims or numbers.
+  graphics, title, tags, cta) unless a problem names it. Don't add new teasers, claims or numbers.
 - If you change a beat, update its fact_ids.
-- Keep the total spoken words (hook + narration + cta) between {min_w} and {max_w}."""
+- Hard limits, whatever you change: hook max {hook_words} words, cta max 8 words, on_screen_text
+  max {ost_words} words, title max 70 characters, total spoken words (hook + narration + cta)
+  {min_w}-{max_w}. To soften a claim inside a limit, swap words rather than add them.{retry}"""
 
 DERIVED_FIELDS = ("word_count", "hook_type", "description")
 
@@ -239,6 +320,8 @@ def script_lines(script: dict[str, Any]) -> dict[str, str]:
     for i, b in enumerate(script.get("beats", []), start=1):
         lines[f"beat {i} narration"] = str(b.get("narration", ""))
         lines[f"beat {i} on_screen_text"] = str(b.get("on_screen_text", ""))
+        if isinstance(b.get("graphic"), dict):
+            lines[f"beat {i} graphic"] = gfx.spec_text(b["graphic"])
     return lines
 
 
@@ -248,11 +331,13 @@ def line_keys(where: str) -> list[str] | None:
     m = re.search(r"beat\s*(\d+)", w)
     if m:
         n = m.group(1)
+        if "graphic" in w:
+            return [f"beat {n} graphic"]
         if "screen" in w or ("text" in w and "narration" not in w):
             return [f"beat {n} on_screen_text"]
         if "narration" in w:
             return [f"beat {n} narration"]
-        return [f"beat {n} narration", f"beat {n} on_screen_text"]
+        return [f"beat {n} narration", f"beat {n} on_screen_text", f"beat {n} graphic"]
     return [k for k in ("title", "hook", "cta") if k in w] or None
 
 
@@ -266,11 +351,12 @@ def keep_lines(draft: dict[str, Any], original: dict[str, Any], keep: dict[str, 
         if key in ("title", "hook", "cta"):
             out[key] = original.get(key, "")
             continue
-        m = re.fullmatch(r"beat (\d+) (narration|on_screen_text)", key)
+        m = re.fullmatch(r"beat (\d+) (narration|on_screen_text|graphic)", key)
         if not m:
             continue
         src, dst = original["beats"][int(m.group(1)) - 1], out["beats"][int(m.group(1)) - 1]
-        fields = ("narration", "fact_ids", "visual_keywords", "role") if m.group(2) == "narration" else ("on_screen_text",)
+        fields = {"narration": ("narration", "fact_ids", "visual_keywords", "role"),
+                  "on_screen_text": ("on_screen_text",), "graphic": ("graphic",)}[m.group(2)]
         for f in fields:
             if f in src:
                 dst[f] = src[f]
@@ -291,31 +377,40 @@ def patch_script(ctx: StageContext, facts_doc: dict[str, Any], script: dict[str,
     restored word for word, whatever the model returned. None if the patch is unusable."""
     cfg = ctx.config
     facts = facts_doc["facts"]
+    ids, stated = {f["id"] for f in facts}, stated_numbers(facts)
     min_w, max_w = cfg.get("content.target_words", [130, 160])
-    editable = {k: v for k, v in script.items() if k not in DERIVED_FIELDS}
-    prompt = PATCH_PROMPT.format(problems="\n".join(f"- {p}" for p in problems), facts=_facts_block(facts),
-                                 script=json.dumps(editable, ensure_ascii=False, indent=1), min_w=min_w, max_w=max_w)
-    try:
-        draft = ctx.llm_for("writer").complete_json(prompt, system=SYSTEM, temperature=0.3)
-    except LLMError as e:
-        log.warning("script: patch failed (%s); rewriting instead", e)
-        return None
-    if not isinstance(draft, dict):
-        return None
-    ids = {f["id"] for f in facts}
-    # Prefer the patch with every passed line restored; if that breaks the word count, take it as returned.
-    for candidate in ([keep_lines(draft, script, keep)] if keep else []) + [draft]:
-        issues = validate(candidate, cfg, ids)
-        if not issues:
-            draft = candidate
-            break
-    else:
-        log.warning("script: patch invalid (%s); rewriting instead", "; ".join(issues))
-        return None
+    editable = json.dumps({k: v for k, v in script.items() if k not in DERIVED_FIELDS}, ensure_ascii=False, indent=1)
     hook_type = script.get("hook_type") or ctx.state.data.get("experiment", {}).get("hook_type")
-    draft = _finalize(draft, facts, hook_type)
-    log.info("script: patched %d flagged line(s): '%s' (%d words)", len(problems), draft["title"], draft["word_count"])
-    return draft
+    retry = ""
+    for attempt in (1, 2):  # a patch that breaks a format rule gets one more try before a full rewrite
+        prompt = PATCH_PROMPT.format(
+            problems="\n".join(f"- {p}" for p in problems), facts=_facts_block(facts), script=editable,
+            min_w=min_w, max_w=max_w, hook_words=cfg.get("content.hook_max_words", 8),
+            ost_words=cfg.get("content.on_screen_text_max_words", 5), retry=retry)
+        try:
+            draft = ctx.llm_for("writer").complete_json(prompt, system=SYSTEM, temperature=0.3)
+        except LLMError as e:
+            log.warning("script: patch failed (%s); rewriting instead", e)
+            return None
+        if not isinstance(draft, dict):
+            return None
+        _drop_graphics_unless_enabled(draft, cfg)
+        issues: list[str] = []
+        # Prefer the patch with every passed line restored; if that breaks a limit, take it as returned.
+        for candidate in ([keep_lines(draft, script, keep)] if keep else []) + [draft]:
+            issues = validate(candidate, cfg, ids, stated)
+            if drop_bad_graphics(candidate, issues, int(cfg.get("video.max_graphics", 2))):
+                issues = validate(candidate, cfg, ids, stated)
+            if not issues:
+                draft = _finalize(candidate, facts, hook_type)
+                log.info("script: patched %d flagged line(s): '%s' (%d words)",
+                         len(problems), draft["title"], draft["word_count"])
+                return draft
+        log.warning("script: patch attempt %d broke format rules (%s)", attempt, "; ".join(issues))
+        retry = ("\n\nYOUR LAST FIX BROKE THESE RULES. Fix the flagged lines again, within the limits:\n"
+                 + "\n".join(f"- {i}" for i in issues))
+    log.warning("script: patch unusable; rewriting instead")
+    return None
 
 
 def write_script(
@@ -356,12 +451,17 @@ def write_script(
             min_w=min_w, max_w=max_w, ost_words=cfg.get("content.on_screen_text_max_words", 5),
             banned=", ".join(f'"{b}"' for b in BANNED_PHRASES), feedback=feedback,
             hook_type=hook_type, playbook=playbook_prompt(cfg, "script"),
+            graphics=(GRAPHICS_RULES.format(max_graphics=int(cfg.get("video.max_graphics", 2)))
+                      if cfg.get("video.graphics", False) else ""),
         )
         draft = ctx.llm_for("writer").complete_json(prompt, system=SYSTEM, temperature=0.8)
         if not isinstance(draft, dict):
             issues, last = ["response was not a JSON object"], {}
             continue
-        issues = validate(draft, cfg, fact_ids)
+        _drop_graphics_unless_enabled(draft, cfg)
+        issues = validate(draft, cfg, fact_ids, stated_numbers(facts))
+        if drop_bad_graphics(draft, issues, int(cfg.get("video.max_graphics", 2))):
+            issues = validate(draft, cfg, fact_ids, stated_numbers(facts))
         if not issues:
             draft = _finalize(draft, facts, hook_type)
             log.info("script: '%s' (%d words, %d beats, attempt %d)",

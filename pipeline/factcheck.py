@@ -16,10 +16,10 @@ from __future__ import annotations
 
 import json
 import logging
-import re
 from pathlib import Path
 from typing import Any
 
+from pipeline import graphics as gfx
 from pipeline import script as script_mod
 from pipeline.stages import AbortRun, StageContext
 from pipeline.state import atomic_write_json, read_json
@@ -42,7 +42,7 @@ hook: {hook}
 cta: {cta}
 
 Instructions:
-1. List EVERY statement in the title, hook, narration, on-screen text and cta, including
+1. List EVERY statement in the title, hook, narration, on-screen text, graphics and cta, including
    numbers, comparisons, superlatives ("the fastest", "the only") and causal claims.
    Analogies are fine if clearly framed as analogies and not misleading.
 2. For each, give the supporting fact ids, or none.
@@ -64,7 +64,7 @@ Instructions:
                       weapons, drugs or dangerous chemicals, even if a fact supports it.
    In "note", suggest a fix in plain everyday language, never more technical wording.
 
-Return JSON: {{"claims": [{{"where": "hook|beat 1|title|cta|...", "claim": "...", "fact_ids": ["F1"],
+Return JSON: {{"claims": [{{"where": "hook|beat 1|beat 1 graphic|title|cta|...", "claim": "...", "fact_ids": ["F1"],
 "verdict": "supported|common_knowledge|no_claim|overstated|unsupported|unsafe", "note": "<what to fix>"}}]}}"""
 
 # Accepted without a fact id, as long as any number in them is one the facts state.
@@ -74,12 +74,9 @@ FREE_VERDICTS = ("common_knowledge", "no_claim")
 def _beats_block(script: dict[str, Any]) -> str:
     return "\n".join(
         f"beat {i}: narration: {b.get('narration', '')} | on_screen_text: {b.get('on_screen_text', '')}"
+        + (f" | graphic: {gfx.spec_text(b['graphic'])}" if isinstance(b.get("graphic"), dict) else "")
         for i, b in enumerate(script.get("beats", []), start=1)
     )
-
-
-def _numbers(text: str) -> set[str]:
-    return {n.replace(",", "").rstrip(".") for n in re.findall(r"\d[\d,.]*", text)}
 
 
 def _problem(c: dict[str, Any]) -> str:
@@ -102,14 +99,14 @@ def check(ctx: StageContext, facts: list[dict[str, Any]], script: dict[str, Any]
         system=SYSTEM, temperature=0.1,
     )
     known = {f["id"] for f in facts}
-    stated_numbers = set().union(*(_numbers(f["fact"]) for f in facts))
+    stated = script_mod.stated_numbers(facts)
     claims = result.get("claims", []) if isinstance(result, dict) else []
     for c in claims:
         verdict = c.get("verdict")
         cited = [f for f in c.get("fact_ids") or [] if f in known]
         if verdict == "supported" and not cited:
             verdict = "unsupported"  # "supported" with no valid fact id is not accepted
-        elif verdict in FREE_VERDICTS and not _numbers(str(c.get("claim", ""))) <= stated_numbers:
+        elif verdict in FREE_VERDICTS and not script_mod.numbers_in(str(c.get("claim", ""))) <= stated:
             verdict = "unsupported"  # framing can't carry a number the facts don't state
             c["note"] = c.get("note") or "use only numbers the facts state"
         c["verdict"] = verdict

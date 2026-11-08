@@ -48,7 +48,8 @@ def run(ctx: StageContext) -> list[Path]:
     passed = all(c["ok"] for c in checks)
     out = ctx.path("qa.json")
     atomic_write_json(out, {"passed": passed, "checks": checks,
-                            "text_card_shots": sum(1 for s in shots if s["kind"] == "card")})
+                            "text_card_shots": sum(1 for s in shots if s["kind"] == "card"),
+                            "graphic_shots": sum(1 for s in shots if s["kind"] == "graphic")})
     for c in checks:
         log.info("qa: %-15s %s %s", c["name"], "PASS" if c["ok"] else "FAIL", c.get("value", ""))
     if not passed:

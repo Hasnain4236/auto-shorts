@@ -28,6 +28,13 @@ Different free models handle different jobs (`llm.roles` in `config.yaml`). The 
 fact-checker are deliberately different model families, so the checker catches what the writer
 invents.
 
+**Graphics** (`video.graphics` in `config.yaml`): stock footage can't show "60 kW vs 10 kW". When
+a beat's point is a number, a comparison or a short process, the writer can give it an animated
+graphic (counter, comparison bars, percent ring or numbered steps; `pipeline/graphics.py`).
+It appears on the shot where the number is spoken and starts counting on that word. A graphic
+may only show numbers the facts state (checked in code), and the fact-checker reads it like any
+other line. At most `video.max_graphics` per video, so most shots stay real footage.
+
 ## Quick start (local, Windows)
 
 ```powershell

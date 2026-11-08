@@ -114,8 +114,8 @@ def headlines_from_shots(shots: list[dict[str, Any]]) -> list[tuple[float, float
     prev_base = None
     for shot in shots:
         base = re.sub(r"[ab]$", "", shot["slot"])
-        # hook: the big spoken caption carries it; text cards already show the headline large
-        if base == "hook" or shot.get("kind") == "card":
+        # hook: the big spoken caption carries it; text cards and graphics already show it large
+        if base == "hook" or shot.get("kind") in ("card", "graphic"):
             prev_base = None
             continue
         if base == prev_base and out:

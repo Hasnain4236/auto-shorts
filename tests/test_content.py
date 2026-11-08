@@ -254,11 +254,20 @@ def test_unusable_patch_falls_back_to_full_rewrite(ctx):
     # the flagged line (the hook) comes back far too long, so restoring passed lines can't save it
     long_hook = "This hook is now far too long to land within two seconds of the video"
     c = _factcheck_ctx(ctx(script_queue=[GOOD_SCRIPT], check_queue=[UNSUPPORTED, SUPPORTED],
-                           patch_queue=[dict(GOOD_SCRIPT, hook=long_hook)]))
+                           patch_queue=[dict(GOOD_SCRIPT, hook=long_hook)] * 2))
     factcheck.run(c)
     prompts = c.llm._slots[0].provider.calls
     assert any("RETENTION STRUCTURE" in p for p in prompts)  # the full rewrite ran
     assert read_json(c.path("factcheck.json"))["passed"] is True
+
+
+def test_patch_that_breaks_a_limit_gets_a_second_try(ctx):
+    long_hook = "This hook is now far too long to land within two seconds of the video"
+    c = _factcheck_ctx(ctx(check_queue=[UNSUPPORTED, SUPPORTED], patch_queue=[dict(GOOD_SCRIPT, hook=long_hook)]))
+    factcheck.run(c)  # empty script_queue: a full rewrite would crash
+    prompts = c.llm._slots[0].provider.calls
+    assert any("YOUR LAST FIX BROKE THESE RULES" in p and "hook has" in p for p in prompts)
+    assert not any("RETENTION STRUCTURE" in p for p in prompts)
 
 
 def test_framing_needs_no_fact_id_but_numbers_do(ctx):
@@ -307,5 +316,26 @@ def test_patch_cannot_change_lines_that_passed(ctx):
 def test_line_keys_map_checker_locations():
     assert script.line_keys("beat 5 on_screen_text") == ["beat 5 on_screen_text"]
     assert script.line_keys("Beat 2 narration") == ["beat 2 narration"]
-    assert script.line_keys("beat 3") == ["beat 3 narration", "beat 3 on_screen_text"]
+    assert script.line_keys("beat 3") == ["beat 3 narration", "beat 3 on_screen_text", "beat 3 graphic"]
+    assert script.line_keys("beat 2 graphic") == ["beat 2 graphic"]
     assert script.line_keys("title") == ["title"] and script.line_keys("overall tone") is None
+
+
+def test_scorer_drops_reworded_repeats_of_covered_topics(ctx):
+    """Fuzzy matching scores these two at 0.75 (< 0.85), so the model has to catch the repeat."""
+    c = ctx()
+    ledger = Ledger(c.config.ledger_path)
+    ledger.append({"topic": "How do video games realistically simulate car crashes?"})
+    seen = {}
+
+    def respond(prompt):
+        seen["prompt"] = prompt
+        return json.dumps({"items": [
+            {"i": 0, "niche_relevance": 0.9, "hook_potential": 0.9, "angle": "How does BeamNG fake a crash?", "covered": True},
+            {"i": 1, "niche_relevance": 0.9, "hook_potential": 0.8, "angle": "Why does a cricket ball swing?"}]})
+
+    c._llm = LLM([(FakeProvider(respond), 0)], sleep=lambda s: None)
+    cands = [trends.Candidate(title="BeamNG crash test", source="youtube"), trends.Candidate(title="cricket", source="youtube")]
+    out = trends.score_candidates(c, cands, trends.covered_topics(ledger))
+    assert [x.title for x in out] == ["cricket"]
+    assert "realistically simulate car crashes" in seen["prompt"]
