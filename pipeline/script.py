@@ -213,6 +213,111 @@ def _facts_block(facts: list[dict[str, Any]]) -> str:
     return "\n".join(f"{f['id']}: {f['fact']}" for f in facts)
 
 
+PATCH_PROMPT = """A fact-checker reviewed this YouTube Short script. LINES FLAGGED BY THE FACT-CHECKER:
+{problems}
+
+FACTS (the only accepted evidence):
+{facts}
+
+SCRIPT (JSON):
+{script}
+
+Return the same JSON object, changing ONLY the flagged lines:
+- Fix each flagged line with the smallest change that makes it true to the facts: correct or
+  soften the wording, or swap in a different supported fact. Keep it spoken, punchy and plain.
+- Copy every other field exactly as it is (hook, the other beats, roles, visual_keywords,
+  title, tags, cta) unless a problem names it. Don't add new teasers, claims or numbers.
+- If you change a beat, update its fact_ids.
+- Keep the total spoken words (hook + narration + cta) between {min_w} and {max_w}."""
+
+DERIVED_FIELDS = ("word_count", "hook_type", "description")
+
+
+def script_lines(script: dict[str, Any]) -> dict[str, str]:
+    """Every checkable line of a script, keyed the way the fact-checker names them."""
+    lines = {k: str(script.get(k, "")) for k in ("title", "hook", "cta")}
+    for i, b in enumerate(script.get("beats", []), start=1):
+        lines[f"beat {i} narration"] = str(b.get("narration", ""))
+        lines[f"beat {i} on_screen_text"] = str(b.get("on_screen_text", ""))
+    return lines
+
+
+def line_keys(where: str) -> list[str] | None:
+    """The script line(s) a fact-checker "where" points at, or None if it can't be told."""
+    w = (where or "").lower()
+    m = re.search(r"beat\s*(\d+)", w)
+    if m:
+        n = m.group(1)
+        if "screen" in w or ("text" in w and "narration" not in w):
+            return [f"beat {n} on_screen_text"]
+        if "narration" in w:
+            return [f"beat {n} narration"]
+        return [f"beat {n} narration", f"beat {n} on_screen_text"]
+    return [k for k in ("title", "hook", "cta") if k in w] or None
+
+
+def keep_lines(draft: dict[str, Any], original: dict[str, Any], keep: dict[str, str]) -> dict[str, Any]:
+    """Copy the `keep` lines from the original into the draft (a kept narration brings its beat's
+    fact ids and visuals along). Only when both have the same number of beats."""
+    if len(draft.get("beats") or []) != len(original.get("beats") or []):
+        return draft
+    out = json.loads(json.dumps(draft))
+    for key in keep:
+        if key in ("title", "hook", "cta"):
+            out[key] = original.get(key, "")
+            continue
+        m = re.fullmatch(r"beat (\d+) (narration|on_screen_text)", key)
+        if not m:
+            continue
+        src, dst = original["beats"][int(m.group(1)) - 1], out["beats"][int(m.group(1)) - 1]
+        fields = ("narration", "fact_ids", "visual_keywords", "role") if m.group(2) == "narration" else ("on_screen_text",)
+        for f in fields:
+            if f in src:
+                dst[f] = src[f]
+    return out
+
+
+def _finalize(draft: dict[str, Any], facts: list[dict[str, Any]], hook_type: str | None) -> dict[str, Any]:
+    draft["word_count"] = word_count(spoken_text(draft))
+    draft["hook_type"] = hook_type
+    draft["description"] = build_description(draft, facts)
+    return draft
+
+
+def patch_script(ctx: StageContext, facts_doc: dict[str, Any], script: dict[str, Any],
+                 problems: list[str], keep: dict[str, str] | None = None) -> dict[str, Any] | None:
+    """Fix only the lines the fact-checker flagged. A full rewrite tends to fix one line and
+    slip a new unsupported one in elsewhere; a patch converges. `keep` (lines that passed) is
+    restored word for word, whatever the model returned. None if the patch is unusable."""
+    cfg = ctx.config
+    facts = facts_doc["facts"]
+    min_w, max_w = cfg.get("content.target_words", [130, 160])
+    editable = {k: v for k, v in script.items() if k not in DERIVED_FIELDS}
+    prompt = PATCH_PROMPT.format(problems="\n".join(f"- {p}" for p in problems), facts=_facts_block(facts),
+                                 script=json.dumps(editable, ensure_ascii=False, indent=1), min_w=min_w, max_w=max_w)
+    try:
+        draft = ctx.llm_for("writer").complete_json(prompt, system=SYSTEM, temperature=0.3)
+    except LLMError as e:
+        log.warning("script: patch failed (%s); rewriting instead", e)
+        return None
+    if not isinstance(draft, dict):
+        return None
+    ids = {f["id"] for f in facts}
+    # Prefer the patch with every passed line restored; if that breaks the word count, take it as returned.
+    for candidate in ([keep_lines(draft, script, keep)] if keep else []) + [draft]:
+        issues = validate(candidate, cfg, ids)
+        if not issues:
+            draft = candidate
+            break
+    else:
+        log.warning("script: patch invalid (%s); rewriting instead", "; ".join(issues))
+        return None
+    hook_type = script.get("hook_type") or ctx.state.data.get("experiment", {}).get("hook_type")
+    draft = _finalize(draft, facts, hook_type)
+    log.info("script: patched %d flagged line(s): '%s' (%d words)", len(problems), draft["title"], draft["word_count"])
+    return draft
+
+
 def write_script(
     ctx: StageContext,
     facts_doc: dict[str, Any],
@@ -258,9 +363,7 @@ def write_script(
             continue
         issues = validate(draft, cfg, fact_ids)
         if not issues:
-            draft["word_count"] = word_count(spoken_text(draft))
-            draft["hook_type"] = hook_type
-            draft["description"] = build_description(draft, facts)
+            draft = _finalize(draft, facts, hook_type)
             log.info("script: '%s' (%d words, %d beats, attempt %d)",
                      draft["title"], draft["word_count"], len(draft["beats"]), attempt)
             return draft

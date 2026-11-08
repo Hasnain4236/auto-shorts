@@ -59,8 +59,10 @@ GOOD_SCRIPT = {
 }
 
 
-def responder(script_queue: list[dict], check_queue: list[dict]):
+def responder(script_queue: list[dict], check_queue: list[dict], patch_queue: list[dict] | None = None):
     def respond(prompt: str) -> str:
+        if "LINES FLAGGED BY THE FACT-CHECKER" in prompt:
+            return json.dumps(patch_queue.pop(0) if patch_queue else GOOD_SCRIPT)
         if "Items:" in prompt:
             return json.dumps({"items": [
                 {"i": 0, "niche_relevance": 0.2, "hook_potential": 0.9, "angle": "x", "search_queries": [], "avoid": False},
@@ -89,8 +91,9 @@ def ctx(tmp_path: Path, monkeypatch):
     cfg.ledger_path = tmp_path / "ledger.json"
     state = RunState.create(cfg.runs_dir)
 
-    def make(script_queue=None, check_queue=None):
-        llm = LLM([(FakeProvider(responder(script_queue or [], check_queue or [])), 0)], sleep=lambda s: None)
+    def make(script_queue=None, check_queue=None, patch_queue=None):
+        llm = LLM([(FakeProvider(responder(script_queue or [], check_queue or [], patch_queue)), 0)],
+                  sleep=lambda s: None)
         return StageContext(run_dir=state.run_dir, config=cfg, state=state, _llm=llm)
     return make
 
@@ -223,3 +226,86 @@ def test_topics_from_aborted_runs_are_skipped(ctx):
     cands = [trends.Candidate(title=t, source="x", niche_relevance=0.9, score=s)
              for t, s in (("failed factcheck", 0.9), ("too few facts", 0.8), ("fresh topic", 0.5))]
     assert [x.title for x in trends.rank(cands, Ledger(c.config.ledger_path), 0.7, 0.85, skip)] == ["fresh topic"]
+
+
+OVERSTATED = {"claims": [{"where": "beat 3", "claim": "about 5.5 times more", "fact_ids": ["F2"],
+                          "verdict": "overstated", "note": "say roughly"}]}
+
+
+def _factcheck_ctx(c):
+    c.path("facts.json").write_text(json.dumps({"topic": "sky", "angle": "why", "facts": VERIFIED}))
+    c.path("script.json").write_text(json.dumps(GOOD_SCRIPT))
+    return c
+
+
+def test_factcheck_patches_only_flagged_lines(ctx):
+    patched = json.loads(json.dumps(GOOD_SCRIPT))
+    patched["beats"][2]["narration"] = patched["beats"][2]["narration"].replace("about five", "roughly five")
+    # empty script_queue: a full rewrite would crash, so passing proves the patch was used
+    c = _factcheck_ctx(ctx(check_queue=[OVERSTATED, SUPPORTED], patch_queue=[patched]))
+    factcheck.run(c)
+    out = read_json(c.path("script.json"))
+    assert "roughly five" in out["beats"][2]["narration"] and out["beats"][0] == GOOD_SCRIPT["beats"][0]
+    assert out["word_count"] and out["description"]
+    assert read_json(c.path("factcheck.json"))["rewrites"] == 1
+
+
+def test_unusable_patch_falls_back_to_full_rewrite(ctx):
+    # the flagged line (the hook) comes back far too long, so restoring passed lines can't save it
+    long_hook = "This hook is now far too long to land within two seconds of the video"
+    c = _factcheck_ctx(ctx(script_queue=[GOOD_SCRIPT], check_queue=[UNSUPPORTED, SUPPORTED],
+                           patch_queue=[dict(GOOD_SCRIPT, hook=long_hook)]))
+    factcheck.run(c)
+    prompts = c.llm._slots[0].provider.calls
+    assert any("RETENTION STRUCTURE" in p for p in prompts)  # the full rewrite ran
+    assert read_json(c.path("factcheck.json"))["passed"] is True
+
+
+def test_framing_needs_no_fact_id_but_numbers_do(ctx):
+    c = ctx(check_queue=[
+        {"claims": [
+            {"where": "beat 1", "claim": "The secret starts miles away", "fact_ids": [], "verdict": "no_claim"},
+            {"where": "hook", "claim": "the sky looks blue", "fact_ids": [], "verdict": "common_knowledge"},
+            {"where": "beat 2", "claim": "blue scatters more", "fact_ids": ["F1"], "verdict": "supported"}]},
+        {"claims": [{"where": "beat 3 on_screen_text", "claim": "5.5x more", "fact_ids": [], "verdict": "no_claim"}]},
+        {"claims": [{"where": "beat 3", "claim": "about 9 times more", "fact_ids": [], "verdict": "common_knowledge"}]},
+        {"claims": [{"where": "beat 2", "claim": "blue scatters more", "fact_ids": [], "verdict": "supported"}]},
+    ])
+    assert factcheck.check(c, VERIFIED, GOOD_SCRIPT)["passed"]
+    assert factcheck.check(c, VERIFIED, GOOD_SCRIPT)["passed"]  # a number the facts state (F2: 5.5)
+    numbers = factcheck.check(c, VERIFIED, GOOD_SCRIPT)
+    assert not numbers["passed"] and "unsupported" in numbers["problems"][0]  # 9 is in no fact
+    assert not factcheck.check(c, VERIFIED, GOOD_SCRIPT)["passed"]  # "supported" still needs a fact id
+
+
+def test_reflag_of_an_approved_unchanged_line_is_ignored(ctx):
+    """The checker can pass a line in one round and flag it, unchanged, in the next."""
+    patched = json.loads(json.dumps(GOOD_SCRIPT))
+    patched["beats"][2]["narration"] = patched["beats"][2]["narration"].replace("about five", "roughly five")
+    reflag = {"claims": [{"where": "beat 2 narration", "claim": "Blue light gets scattered far more than red",
+                          "fact_ids": [], "verdict": "unsupported", "note": "x"}]}
+    c = _factcheck_ctx(ctx(check_queue=[OVERSTATED, reflag], patch_queue=[patched]))
+    factcheck.run(c)
+    fc = read_json(c.path("factcheck.json"))
+    assert fc["passed"] and fc["rewrites"] == 1
+    assert fc["history"][1]["claims"][0]["ignored"]
+
+
+def test_patch_cannot_change_lines_that_passed(ctx):
+    patched = json.loads(json.dumps(GOOD_SCRIPT))
+    patched["beats"][2]["narration"] = patched["beats"][2]["narration"].replace("about five", "roughly five")
+    patched["beats"][0]["narration"] += " Seriously."  # not flagged: must be put back
+    patched["title"] = "A brand new title"
+    c = _factcheck_ctx(ctx(check_queue=[OVERSTATED, SUPPORTED], patch_queue=[patched]))
+    factcheck.run(c)
+    out = read_json(c.path("script.json"))
+    assert "roughly five" in out["beats"][2]["narration"]
+    assert out["beats"][0]["narration"] == GOOD_SCRIPT["beats"][0]["narration"]
+    assert out["title"] == GOOD_SCRIPT["title"]
+
+
+def test_line_keys_map_checker_locations():
+    assert script.line_keys("beat 5 on_screen_text") == ["beat 5 on_screen_text"]
+    assert script.line_keys("Beat 2 narration") == ["beat 2 narration"]
+    assert script.line_keys("beat 3") == ["beat 3 narration", "beat 3 on_screen_text"]
+    assert script.line_keys("title") == ["title"] and script.line_keys("overall tone") is None
