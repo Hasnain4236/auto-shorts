@@ -3,19 +3,29 @@ from __future__ import annotations
 
 import html
 import logging
+import os
 import re
-from typing import Any
+import time
+from typing import Any, Callable
 from urllib.parse import urlparse
 
 import requests
 
 log = logging.getLogger(__name__)
 
-USER_AGENT = "auto-shorts/0.1 (open-source educational shorts pipeline)"
+# Wikimedia (and other APIs) throttle anonymous bots, especially from shared cloud IPs like
+# GitHub Actions. Their policy asks for "<name>/<version> (<contact URL or email>)", so the
+# bot identifies itself with the app's public homepage, which lists a contact address.
+USER_AGENT = os.environ.get("HTTP_USER_AGENT") or \
+    "CrazyFindingsBot/0.1 (https://hasnain4236.github.io/) python-requests"
 TIMEOUT = 20
 MAX_BYTES = 2_000_000
+RETRY_STATUS = {429, 503}
+MAX_RETRIES = 3
+MAX_WAIT_S = 30.0
 
 _session: requests.Session | None = None
+_sleep: Callable[[float], None] = time.sleep
 
 
 def session() -> requests.Session:
@@ -26,15 +36,35 @@ def session() -> requests.Session:
     return _session
 
 
+def _retry_wait(r: requests.Response, attempt: int) -> float:
+    try:
+        wait = float(r.headers.get("retry-after", ""))
+    except ValueError:  # missing, or an HTTP date
+        wait = 2.0 ** (attempt + 1)
+    return min(MAX_WAIT_S, max(1.0, wait))
+
+
+def _get(url: str, params: dict[str, Any] | None = None, stream: bool = False) -> requests.Response:
+    """GET that waits and retries when a server says "slow down" (429/503)."""
+    for attempt in range(MAX_RETRIES + 1):
+        r = session().get(url, params=params, timeout=TIMEOUT, stream=stream)
+        if r.status_code in RETRY_STATUS and attempt < MAX_RETRIES:
+            wait = _retry_wait(r, attempt)
+            log.info("http: %s from %s; retrying in %.0fs", r.status_code, urlparse(url).netloc, wait)
+            r.close()
+            _sleep(wait)
+            continue
+        r.raise_for_status()
+        return r
+    raise AssertionError("unreachable")
+
+
 def get_json(url: str, params: dict[str, Any] | None = None) -> Any:
-    r = session().get(url, params=params, timeout=TIMEOUT)
-    r.raise_for_status()
-    return r.json()
+    return _get(url, params).json()
 
 
 def get_text(url: str, params: dict[str, Any] | None = None) -> str:
-    r = session().get(url, params=params, timeout=TIMEOUT, stream=True)
-    r.raise_for_status()
+    r = _get(url, params, stream=True)
     content = r.raw.read(MAX_BYTES, decode_content=True)
     r.close()
     return content.decode(r.encoding or "utf-8", errors="replace")
