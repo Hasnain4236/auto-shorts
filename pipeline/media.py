@@ -85,9 +85,11 @@ def silences(path: Path, min_gap_s: float = 1.5, noise_db: int = -40) -> list[tu
     return list(zip(starts, ends + [float("inf")] * (len(starts) - len(ends))))
 
 
-def black_segments(path: Path, min_s: float = 0.8) -> list[tuple[float, float]]:
+def black_segments(path: Path, min_s: float = 0.8, seconds: float | None = None) -> list[tuple[float, float]]:
+    """(start, end) of stretches that look black, in the first `seconds` (default: all of it)."""
+    limit = ["-t", f"{seconds:.2f}"] if seconds else []
     stderr = subprocess.run(
-        [ffmpeg_bin(), "-hide_banner", "-i", str(path), "-vf", f"blackdetect=d={min_s}:pix_th=0.08",
+        [ffmpeg_bin(), "-hide_banner", *limit, "-i", str(path), "-vf", f"blackdetect=d={min_s}:pix_th=0.08",
          "-an", "-f", "null", "-"], capture_output=True, text=True, encoding="utf-8", errors="replace").stderr
     return [(float(a), float(b)) for a, b in
             re.findall(r"black_start:(\d+(?:\.\d+)?) black_end:(\d+(?:\.\d+)?)", stderr)]

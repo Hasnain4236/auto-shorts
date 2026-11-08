@@ -24,7 +24,7 @@ from pipeline import http
 from pipeline.cards import render_card
 from pipeline.config import env
 from pipeline.llm import LLMError
-from pipeline.media import font_path
+from pipeline.media import black_segments, font_path
 from pipeline.stages import StageContext
 from pipeline.state import atomic_write_json, read_json
 
@@ -311,6 +311,10 @@ def run(ctx: StageContext) -> list[Path]:
         if picked:
             try:
                 cached = download(picked["url"], cache / f"{picked['id']}.mp4")
+                # Specks on black, a starless night, a long fade-in: on a phone that reads as a dead
+                # screen (and QA rejects the whole video for it), so a text card goes there instead.
+                if black_segments(cached, seconds=need + 1.0):
+                    raise ValueError("clip is mostly black where it would be shown")
                 dest = clips_dir / f"{n:02d}_{shot['slot']}.mp4"
                 shutil.copyfile(cached, dest)
                 shot.update(kind="stock", file=dest.name, query=picked["query"], width=picked["width"],
@@ -321,7 +325,7 @@ def run(ctx: StageContext) -> list[Path]:
                          (picked.get("vision") or {}).get("reason", ""))
                 continue
             except Exception as e:
-                log.warning("footage: download failed (%s); using a text card", e)
+                log.warning("footage: can't use the clip for %s (%s); using a text card", shot["slot"], e)
         dest = clips_dir / f"{n:02d}_{shot['slot']}.jpg"
         render_card(shot["on_screen_text"] or script["title"], dest, font, palette_idx=n)
         shot.update(kind="card", file=dest.name, attribution=None)
