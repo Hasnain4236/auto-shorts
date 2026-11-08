@@ -107,6 +107,8 @@ powershell -ExecutionPolicy Bypass -File scripts\setup_github.ps1
 
 It creates a **private** repo and pushes the project (`.env` is git-ignored). It copies your
 `.env` keys into GitHub's encrypted secrets and starts one dry run. Nothing public is created.
+(The live repo was later made public for unlimited Actions minutes. Secrets stay encrypted,
+and the workflow only runs on its schedule or by hand, never for other people's pull requests.)
 After that, `.github/workflows/daily.yml` makes one Short per slot, four times a day
 (08:47, 13:17, 18:17 and 21:17 IST), and each goes public as soon as it's uploaded:
 
@@ -185,7 +187,7 @@ Shorts performance is noisy. Treat the playbook as a hint until there are ~20 vi
 
 | Service | Limit | Use per video |
 |---|---|---|
-| GitHub Actions (private repo) | 2,000 minutes/month | ~10 min (4/day ≈ 1,200 min/month) |
+| GitHub Actions | unlimited on a public repo (2,000 min/month if private) | ~10–15 min |
 | Gemini | ~20 requests/day **per model** (4 models chained) | ~5–8 |
 | OpenRouter free models (Nemotron) | ~50 requests/day per account | 1–3 (writer) |
 | Groq | generous | 1–3 (checker) |

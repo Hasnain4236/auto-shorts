@@ -10,9 +10,9 @@ channel:
     watching or swipe away.
   tone: "curious, clear, punchy, no hype, never clickbait lies"
   # Daily cap. Each `main.py run` makes ONE video; GitHub Actions runs it once per slot
-  # (the cron lines in .github/workflows/daily.yml), so keep the two in step. 4/day fits the
-  # free limits: ~10 GitHub Actions minutes per video (2,000/month on a private repo) and
-  # ~6 Gemini calls per video.
+  # (the cron lines in .github/workflows/daily.yml), so keep the two in step. The repo is
+  # public, so GitHub Actions minutes are unlimited; the real limit is the free LLM quota
+  # (~6 Gemini calls per video, ~20/day per Gemini model).
   videos_per_day: 4
 
 content:
