@@ -17,5 +17,25 @@
         "hook_type": "stakes"
       }
     }
+  },
+  {
+    "ts": "2026-11-08T16:10:45+00:00",
+    "topic": "Why do artificial intelligence models consume enormous amounts of electric power?",
+    "title": "Could AI Data Centers Dry Up Wells?",
+    "run_id": "2026-11-08_why-do-artificial-intelligence-models-consume-enor",
+    "youtube_id": "5BeLvrJd-Yw",
+    "publish_at": null,
+    "features": {
+      "hook": "Could AI dry up your well?",
+      "hook_type": "stakes",
+      "trend_source": "google_trends",
+      "words": 150,
+      "duration_s": 52.25,
+      "voice": "en-IN-NeerjaNeural",
+      "music": "wallpaper.mp3",
+      "experiment": {
+        "hook_type": "stakes"
+      }
+    }
   }
 ]
