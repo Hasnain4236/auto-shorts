@@ -37,5 +37,25 @@
         "hook_type": "stakes"
       }
     }
+  },
+  {
+    "ts": "2026-11-08T16:53:12+00:00",
+    "topic": "How do video games realistically simulate car crashes and physics?",
+    "title": "Your Game Car Has Invisible Bones",
+    "run_id": "2026-11-08_how-do-video-games-realistically-simulate-car-cras",
+    "youtube_id": "QYHa4KCSXFk",
+    "publish_at": null,
+    "features": {
+      "hook": "That car has invisible bones inside",
+      "hook_type": "counterintuitive",
+      "trend_source": "youtube",
+      "words": 132,
+      "duration_s": 54.35,
+      "voice": "en-IN-NeerjaNeural",
+      "music": "easy-lemon.mp3",
+      "experiment": {
+        "hook_type": "counterintuitive"
+      }
+    }
   }
 ]
