@@ -106,8 +106,8 @@ powershell -ExecutionPolicy Bypass -File scripts\setup_github.ps1
 ```
 
 It creates a **private** repo and pushes the project (`.env` is git-ignored). It copies your
-`.env` keys into GitHub's encrypted secrets, publishes the privacy-policy pages to a small public
-repo, and starts one dry run. After that, `.github/workflows/daily.yml` runs every day at
+`.env` keys into GitHub's encrypted secrets and starts one dry run. Nothing public is created.
+After that, `.github/workflows/daily.yml` runs every day at
 14:47 IST (after the Gemini daily quota resets), and the video goes live at 19:30 IST:
 
 `learn` (analytics) → `run` (make + upload) → prune → cache runs → commit the ledger.
@@ -119,12 +119,30 @@ Run on demand: GitHub → Actions → Daily Short → Run workflow.
 After a new YouTube sign-in, update the secret with
 `.\.venv\Scripts\python scripts\push_secrets.py <you>/auto-shorts`.
 
-**Then publish the Google consent screen** (otherwise the YouTube sign-in expires after 7 days):
-paste the three links the setup script prints into *Branding*. Add `<you>.github.io` under
-*Authorised domains*, then *Audience → Publish app*. Then run `scripts\get_youtube_token.py`
-once more and `push_secrets.py` so GitHub gets the long-lived token.
+### 5. Publish the Google consent screen (or the YouTube sign-in expires every 7 days)
 
-### 5. Or run it in Google Colab
+Google needs a public homepage and privacy policy for the app, and proof that you own the site.
+
+1. **Search Console** (https://search.google.com/search-console), signed in with the Google account
+   that owns the Cloud project: *Add property → URL prefix* → `https://<you>.github.io/` →
+   *HTML tag* → copy the `content="…"` code. Don't click Verify yet.
+2. Publish the pages (homepage, privacy policy, terms) to `https://<you>.github.io/`:
+   ```powershell
+   powershell -ExecutionPolicy Bypass -File scripts\publish_site.ps1 -ContactEmail you@gmail.com -GoogleVerification <code>
+   ```
+3. After about 2 minutes, click **Verify** in Search Console.
+4. **Google Auth Platform → Branding**: set *App name* to exactly `CrazyFindings` (it must match the
+   homepage). Paste the home page, privacy policy and terms links the script printed, add
+   `<you>.github.io` under *Authorised domains*, and save.
+5. **Audience → Publish app.** An unverified app in production works fine for your own account
+   (you just see an "unverified app" warning when signing in), and its sign-in no longer expires.
+   Google's full verification is optional: it only removes that warning. Wait 24 h after step 3
+   before requesting it.
+6. Sign in once more so the long-lived token is issued, then send it to GitHub:
+   `.\.venv\Scripts\python scripts\get_youtube_token.py` →
+   `.\.venv\Scripts\python scripts\push_secrets.py <you>/auto-shorts`.
+
+### 6. Or run it in Google Colab
 
 ```python
 from google.colab import drive, userdata

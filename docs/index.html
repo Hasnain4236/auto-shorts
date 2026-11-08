@@ -3,27 +3,50 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>auto-shorts</title>
+<!--GOOGLE_VERIFICATION-->
+<title>__APP_NAME__</title>
+<meta name="description" content="__APP_NAME__ is a personal app that creates fact-checked science and technology explainer Shorts and uploads them to the CrazyFindings YouTube channel.">
 <style>
-  :root { --bg: #ffffff; --fg: #1a1a1a; --muted: #555; --link: #1a56db; }
-  @media (prefers-color-scheme: dark) { :root { --bg: #111; --fg: #eee; --muted: #aaa; --link: #7aa2ff; } }
-  body { background: var(--bg); color: var(--fg); font: 17px/1.6 system-ui, sans-serif; margin: 0; }
-  main { max-width: 680px; margin: 0 auto; padding: 48px 16px; }
-  h1 { margin-top: 0; } p { color: var(--muted); } a { color: var(--link); }
+  :root { --bg: #ffffff; --fg: #1a1a1a; --muted: #4a4a4a; --link: #1a56db; --rule: #e5e5e5; }
+  @media (prefers-color-scheme: dark) { :root { --bg: #111111; --fg: #eeeeee; --muted: #b5b5b5; --link: #7aa2ff; --rule: #333333; } }
+  body { background: var(--bg); color: var(--fg); font: 17px/1.65 system-ui, -apple-system, "Segoe UI", sans-serif; margin: 0; }
+  main { max-width: 700px; margin: 0 auto; padding: 48px 16px 64px; }
+  h1 { margin: 0 0 8px; font-size: 2.2rem; }
+  h2 { margin-top: 2rem; font-size: 1.25rem; }
+  p, li { color: var(--muted); }
+  a { color: var(--link); }
+  .lead { font-size: 1.15rem; color: var(--fg); }
+  footer { margin-top: 2.5rem; padding-top: 1rem; border-top: 1px solid var(--rule); }
 </style>
 </head>
 <body>
 <main>
-  <h1>auto-shorts</h1>
-  <p>auto-shorts is a personal tool that produces short science and technology explainer
-  videos for a single YouTube channel owned by its operator:
-  <a href="https://www.youtube.com/channel/UClhorqIxTWrQQ-itEkHo3gg">CrazyFindings</a>.</p>
-  <p>It uses the YouTube Data API to upload videos to that channel, and the YouTube Analytics
-  API to read the channel's own performance statistics so future videos can improve. It is
-  not offered to other users and does not access anyone else's YouTube account.</p>
-  <p>Every script is researched from cited public sources, fact-checked, and disclosed as
-  AI-assisted on YouTube.</p>
-  <p><a href="privacy.html">Privacy policy</a> · <a href="terms.html">Terms of service</a></p>
+  <h1>__APP_NAME__</h1>
+  <p class="lead">__APP_NAME__ is a personal publishing app for the
+  <a href="https://www.youtube.com/channel/UClhorqIxTWrQQ-itEkHo3gg">CrazyFindings YouTube channel</a>.
+  It creates short, fact-checked science and technology explainer videos and uploads them to that channel.</p>
+
+  <h2>What the app does</h2>
+  <ul>
+    <li>Picks a trending science or technology topic and researches it from public, cited sources such as Wikipedia and news articles.</li>
+    <li>Writes a short script and checks every factual claim against those sources before anything is published.</li>
+    <li>Produces a vertical video with synthetic narration, captions, licensed stock footage and licensed music.</li>
+    <li>Uploads the finished video to the owner's own YouTube channel and schedules when it becomes public.</li>
+    <li>Reads that channel's own YouTube Analytics (views, watch time, audience retention) to improve future videos.</li>
+  </ul>
+
+  <h2>How it uses a Google account</h2>
+  <p>__APP_NAME__ asks the channel owner for permission to manage their YouTube account (to upload videos and set
+  their title, description and visibility) and to view YouTube Analytics reports for that channel. Only the
+  channel owner uses the app. There is no public sign-up, and it never accesses anyone else's account or data.
+  Every video says in its description that it was made with AI assistance and lists its sources.</p>
+  <p>Full details of what data is accessed and how it is handled are in the
+  <a href="privacy.html">Privacy Policy</a>.</p>
+
+  <footer>
+    <a href="privacy.html">Privacy Policy</a> · <a href="terms.html">Terms of Service</a> ·
+    Contact: <a href="mailto:__CONTACT_EMAIL__">__CONTACT_EMAIL__</a>
+  </footer>
 </main>
 </body>
 </html>

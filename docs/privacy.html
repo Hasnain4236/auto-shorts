@@ -3,50 +3,89 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Privacy Policy · auto-shorts</title>
+<title>Privacy Policy · __APP_NAME__</title>
 <style>
-  :root { --bg: #ffffff; --fg: #1a1a1a; --muted: #555; --link: #1a56db; }
-  @media (prefers-color-scheme: dark) { :root { --bg: #111; --fg: #eee; --muted: #aaa; --link: #7aa2ff; } }
-  body { background: var(--bg); color: var(--fg); font: 17px/1.6 system-ui, sans-serif; margin: 0; }
-  main { max-width: 680px; margin: 0 auto; padding: 48px 16px; }
-  a { color: var(--link); } .muted { color: var(--muted); }
+  :root { --bg: #ffffff; --fg: #1a1a1a; --muted: #4a4a4a; --link: #1a56db; --rule: #e5e5e5; }
+  @media (prefers-color-scheme: dark) { :root { --bg: #111111; --fg: #eeeeee; --muted: #b5b5b5; --link: #7aa2ff; --rule: #333333; } }
+  body { background: var(--bg); color: var(--fg); font: 17px/1.65 system-ui, -apple-system, "Segoe UI", sans-serif; margin: 0; }
+  main { max-width: 700px; margin: 0 auto; padding: 48px 16px 64px; }
+  h1 { margin: 0 0 4px; }
+  h2 { margin-top: 2rem; font-size: 1.2rem; }
+  p, li { color: var(--muted); }
+  a { color: var(--link); }
+  .date { margin-top: 0; }
+  footer { margin-top: 2.5rem; padding-top: 1rem; border-top: 1px solid var(--rule); }
 </style>
 </head>
 <body>
 <main>
   <h1>Privacy Policy</h1>
-  <p class="muted">Last updated: 8 November 2026</p>
+  <p class="date">__APP_NAME__ · Effective 8 November 2026</p>
 
-  <h2>Who uses this app</h2>
-  <p>auto-shorts is used only by its operator to manage the operator's own YouTube channel.
-  It is not offered to the public, and no other person signs in to it.</p>
+  <p>This policy explains what information the __APP_NAME__ app ("the app") accesses through Google and
+  YouTube, how it is used, stored and shared, and how access can be revoked. The app is operated by the owner
+  of the CrazyFindings YouTube channel. Only that person uses it.</p>
 
-  <h2>What data it accesses</h2>
-  <p>With the operator's permission (Google OAuth), the app uses YouTube API Services to:</p>
+  <h2>1. Information the app accesses</h2>
+  <p>With the channel owner's permission, given on Google's consent screen, the app uses these Google OAuth scopes:</p>
   <ul>
-    <li>upload videos and set their title, description, tags and privacy status on the operator's channel;</li>
-    <li>list the channel's own uploads and their privacy status;</li>
-    <li>read the channel's own YouTube Analytics (views, watch time, retention, likes, shares,
-        subscribers gained) for the videos it produced.</li>
+    <li><strong>Manage your YouTube account</strong> (<code>https://www.googleapis.com/auth/youtube</code>): to upload
+      videos to the owner's channel; set each video's title, description, tags, category, visibility and scheduled
+      publish time; and read the channel's own list of uploads and their status.</li>
+    <li><strong>View YouTube Analytics reports</strong> (<code>https://www.googleapis.com/auth/yt-analytics.readonly</code>):
+      to read aggregated statistics for the channel's own videos, such as views, watch time, average percentage
+      viewed, audience retention, likes, shares, comment counts and subscribers gained.</li>
   </ul>
-  <p>It does not access, collect or store personal data about viewers or any other YouTube users.</p>
+  <p>The app does not request or access Gmail, contacts, Drive, location, or any other Google data. It does not
+  collect personal information about viewers. YouTube Analytics data is aggregated, so it doesn't identify individuals.</p>
 
-  <h2>How data is stored</h2>
-  <p>The OAuth refresh token is stored only as a private secret in the operator's environment.
-  Aggregated per-video statistics are stored in the operator's private project files and are used
-  only to improve future videos. No data is sold, shared or transferred to third parties.</p>
+  <h2>2. How the information is used</h2>
+  <ul>
+    <li>To publish the videos the app creates to the owner's own channel, and schedule when they go public.</li>
+    <li>To measure how those videos perform, so future videos can be improved (for example, which topics and
+      opening lines keep viewers watching).</li>
+  </ul>
+  <p>The information is not used for advertising, is not sold, and is not used to build profiles of any person.</p>
 
-  <h2>YouTube and Google</h2>
-  <p>This app uses YouTube API Services. By using it you are also bound by the
-  <a href="https://www.youtube.com/t/terms">YouTube Terms of Service</a>. See the
-  <a href="https://policies.google.com/privacy">Google Privacy Policy</a> for how Google handles data.
-  Access can be revoked at any time at
-  <a href="https://myaccount.google.com/permissions">Google security settings</a>,
-  after which stored analytics are deleted on request.</p>
+  <h2>3. Storage and security</h2>
+  <ul>
+    <li>The OAuth refresh token that lets the app act on the owner's channel is stored only as an encrypted secret
+      in the owner's private GitHub repository settings and in the owner's own computer. It is never published.</li>
+    <li>Per-video statistics and the list of uploaded videos are stored in the owner's private GitHub repository.</li>
+    <li>Data is transmitted only over encrypted (HTTPS) connections to Google, YouTube and GitHub.</li>
+  </ul>
 
-  <h2>Contact</h2>
-  <p>Questions: contact the channel operator via the email listed on the app's Google consent screen.</p>
-  <p><a href="index.html">Home</a></p>
+  <h2>4. Sharing</h2>
+  <p>Information received from Google APIs is not shared with, sold or transferred to any third party. No person
+  other than the channel owner can view it.</p>
+  <p>__APP_NAME__'s use and transfer of information received from Google APIs to any other app will adhere to the
+  <a href="https://developers.google.com/terms/api-services-user-data-policy">Google API Services User Data Policy</a>,
+  including the Limited Use requirements.</p>
+
+  <h2>5. YouTube API Services</h2>
+  <p>The app uses YouTube API Services. By using it you agree to be bound by the
+  <a href="https://www.youtube.com/t/terms">YouTube Terms of Service</a>. Google's handling of data is described in
+  the <a href="https://policies.google.com/privacy">Google Privacy Policy</a>.</p>
+
+  <h2>6. Retention, revoking access and deletion</h2>
+  <p>Statistics are kept only while the app is in use. Access can be revoked at any time from the
+  <a href="https://security.google.com/settings/security/permissions">Google security settings page</a>. After
+  access is revoked, the app can no longer read or change anything on the channel. All stored tokens and
+  statistics are deleted within 30 days, or sooner on request to the contact below.</p>
+
+  <h2>7. Cookies and tracking</h2>
+  <p>Neither the app nor this website uses cookies, analytics trackers or advertising identifiers.</p>
+
+  <h2>8. Children</h2>
+  <p>The app is not directed to children and does not knowingly collect information from children.</p>
+
+  <h2>9. Changes</h2>
+  <p>Any changes to this policy will be posted on this page with a new effective date.</p>
+
+  <h2>10. Contact</h2>
+  <p>Questions or deletion requests: <a href="mailto:__CONTACT_EMAIL__">__CONTACT_EMAIL__</a></p>
+
+  <footer><a href="index.html">Home</a> · <a href="terms.html">Terms of Service</a></footer>
 </main>
 </body>
 </html>
