@@ -10,10 +10,11 @@ channel:
     watching or swipe away.
   tone: "curious, clear, punchy, no hype, never clickbait lies"
   # Daily cap. Each `main.py run` makes ONE video; GitHub Actions runs it once per slot
-  # (the cron lines in .github/workflows/daily.yml), so keep the two in step. The repo is
-  # public, so GitHub Actions minutes are unlimited; the real limit is the free LLM quota
-  # (~6 Gemini calls per video, ~20/day per Gemini model).
-  videos_per_day: 4
+  # (the cron line in .github/workflows/daily.yml), so keep the two in step. Free limits at
+  # 8/day: Actions minutes are unlimited (public repo), YouTube allows 100 uploads/day, and a
+  # video takes ~3 Nemotron calls (50/day shared on OpenRouter) and ~6 Gemini-key calls, with
+  # Gemma and three Groq models (1,000/day each) as overflow.
+  videos_per_day: 8
 
 content:
   target_words: [130, 160]   # spoken words across hook + beats + cta (~2.7 words/s)
@@ -53,8 +54,17 @@ llm:
     - {id: gemini25, name: gemini, model: "gemini-2.5-flash", api_key_env: GEMINI_API_KEY, rpm: 8}
     - {id: gemini35lite, name: gemini, model: "gemini-3.5-flash-lite", api_key_env: GEMINI_API_KEY, rpm: 12}
     - {id: gemini31lite, name: gemini, model: "gemini-3.1-flash-lite", api_key_env: GEMINI_API_KEY, rpm: 12}
+    # Gemma on the Gemini API: same key, its own (much larger) free allowance. The 26B handles
+    # system prompts, JSON and images; the 31B was overloaded when tested, so it's a late fallback.
+    - {id: gemma26, name: gemini, model: "gemma-4-26b-a4b-it", api_key_env: GEMINI_API_KEY, rpm: 15}
+    - {id: gemma31, name: gemini, model: "gemma-4-31b-it", api_key_env: GEMINI_API_KEY, rpm: 15}
+    # Groq: every model has its own 1,000 requests/day (8,000 tokens/min), so each one adds capacity.
     - {id: groq_oss, name: groq, model: "openai/gpt-oss-120b", api_key_env: GROQ_API_KEY,
        base_url: "https://api.groq.com/openai/v1", rpm: 30}
+    - {id: groq_oss20, name: groq, model: "openai/gpt-oss-20b", api_key_env: GROQ_API_KEY,
+       base_url: "https://api.groq.com/openai/v1", rpm: 30, extra: {max_tokens: 6000}}
+    - {id: groq_qwen, name: groq, model: "qwen/qwen3.8-27b", api_key_env: GROQ_API_KEY,
+       base_url: "https://api.groq.com/openai/v1", rpm: 30, extra: {max_tokens: 4000}}
     # Reasoning model: low effort keeps a script call ~50 s instead of 10+ min, and max_tokens
     # must leave room for the reasoning AND the JSON answer.
     - {id: nemotron_ultra, name: openrouter, model: "nvidia/nemotron-3-ultra-550b-a55b:free",
@@ -68,11 +78,12 @@ llm:
 
   # Which models each job uses, in fallback order. Using different model families for
   # writing and fact-checking means the checker doesn't share the writer's blind spots.
+  # Vision gets the Flash-Lite models first, so the other jobs lean on Gemma and Groq.
   roles:
-    default: [gemini35, gemini25, gemini35lite, gemini31lite, groq_oss, gemma]   # trends, research, learning
-    writer:  [nemotron_ultra, gemini35, gemini25, groq_oss]                       # script + rewrites (Nemotron writes punchier)
-    checker: [groq_oss, gemini25, gemini35lite, gemini31lite]                     # factcheck
-    vision:  [gemini35lite, gemini31lite, gemini25, nemotron_vl]                  # footage picking
+    default: [gemini35, gemini25, gemma26, groq_oss, groq_qwen, groq_oss20, gemini35lite, gemini31lite, gemma31, gemma]
+    writer:  [nemotron_ultra, gemini35, gemini25, groq_qwen, gemma26, groq_oss]   # Nemotron writes punchier
+    checker: [groq_oss, groq_oss20, gemini25, gemma26, gemini35lite, gemini31lite]
+    vision:  [gemini35lite, gemini31lite, gemma26, gemini25, nemotron_vl, gemma31]
   max_retries: 6
   base_backoff_s: 2.0
   max_backoff_s: 64.0

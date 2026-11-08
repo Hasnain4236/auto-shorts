@@ -78,6 +78,9 @@ def test_daily_quota_is_not_retried_and_is_remembered(tmp_path):
 
 
 def test_classify_429():
+    too_big = _classify_429("groq", "Request too large for model `qwen` on output tokens per minute (OTPM)")
+    assert type(too_big) is LLMError  # not retryable: move straight on to the next model
+    assert isinstance(_classify_429("groq", "on requests per day (RPD): Limit 1000, Used 1000"), QuotaExhaustedError)
     assert isinstance(_classify_429("g", "GenerateRequestsPerDayPerProjectPerModel-FreeTier"), QuotaExhaustedError)
     assert isinstance(_classify_429("g", "Please retry in 21h", retry_after=76000), QuotaExhaustedError)
     e = _classify_429("g", "rate limit 'retryDelay': '7s'")

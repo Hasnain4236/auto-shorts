@@ -12,7 +12,7 @@ See [AUTO_SHORTS_BUILD_SPEC.md](AUTO_SHORTS_BUILD_SPEC.md) for the full brief.
 | 2 Content | trends, research, script, factcheck | ✅ tested live |
 | 3 Media | tts, footage, captions, compose, qa | ✅ tested live (add music to `assets/music/`) |
 | 4 Distribution | upload, notify, ledger, learn | ✅ live: uploads go public directly |
-| 5 Automation | GitHub Actions, Colab | ✅ running: 4 Shorts a day on GitHub Actions |
+| 5 Automation | GitHub Actions, Colab | ✅ running: 8 Shorts a day on GitHub Actions |
 
 ## How it works
 
@@ -109,15 +109,15 @@ It creates a **private** repo and pushes the project (`.env` is git-ignored). It
 `.env` keys into GitHub's encrypted secrets and starts one dry run. Nothing public is created.
 (The live repo was later made public for unlimited Actions minutes. Secrets stay encrypted,
 and the workflow only runs on its schedule or by hand, never for other people's pull requests.)
-After that, `.github/workflows/daily.yml` makes one Short per slot, four times a day
-(08:47, 13:17, 18:17 and 21:17 IST), and each goes public as soon as it's uploaded:
+After that, `.github/workflows/daily.yml` makes one Short per slot, every 2 hours
+from 08:17 to 22:17 IST (8 a day), and each goes public as soon as it's uploaded:
 
 `learn` (first slot of the day only) → `run` (make + upload one video) → prune → cache runs →
 commit the ledger.
 
-How many a day: `channel.videos_per_day` in `config.yaml` is the cap, and the `cron:` lines are
-the slots. Change both together. The slots are spread out on purpose: back to back, four
-videos would land within an hour and compete for the same first viewers.
+How many a day: `channel.videos_per_day` in `config.yaml` is the cap, and the `cron:` line sets
+the slots. Change both together. The slots are spread out on purpose: back to back, the day's
+videos would land within an hour or two and compete for the same first viewers.
 
 A failed run resumes from the failed stage in the next slot and sends a Telegram alert. A run
 that aborts (no topic survives research or fact-checking, or QA rejects the render) gets one
@@ -188,10 +188,11 @@ Shorts performance is noisy. Treat the playbook as a hint until there are ~20 vi
 | Service | Limit | Use per video |
 |---|---|---|
 | GitHub Actions | unlimited on a public repo (2,000 min/month if private) | ~10–15 min |
-| Gemini | ~20 requests/day **per model** (4 models chained) | ~5–8 |
-| OpenRouter free models (Nemotron) | ~50 requests/day per account | 1–3 (writer) |
-| Groq | generous | 1–3 (checker) |
-| YouTube Data API | 10,000 units/day | one upload (1,600 units at most) + a few reads |
+| Gemini key: Flash models | ~20 requests/day **per model** | ~5–8 |
+| Gemini key: Gemma 4 | much larger free allowance, separate from Flash | overflow |
+| OpenRouter free models (Nemotron writes) | ~50 requests/day **per account**, shared by all free models | 1–4 (writer) |
+| Groq (gpt-oss-120b, gpt-oss-20b, Qwen 3.8) | 1,000 requests/day **per model**, 8,000 tokens/min | 2–3 (checker) |
+| YouTube Data API | uploads: own bucket of 100/day (1 unit each); 10,000 units/day for the rest | one upload + a few reads |
 | Pixabay | 100 requests/minute | ~20 |
 
 Models that hit a daily limit are skipped automatically until the quota resets.

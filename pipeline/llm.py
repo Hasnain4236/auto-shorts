@@ -42,6 +42,8 @@ MAX_RETRY_WAIT_S = 300
 
 
 def _classify_429(provider: str, message: str, retry_after: float | None = None) -> LLMError:
+    if "request too large" in message.lower():  # this request can never fit this model's per-minute limit
+        return LLMError(f"{provider}: request too large for its rate limit")
     m = re.search(r"retry(?:Delay)?['\"]?\s*[:=]?\s*['\"]?(\d+(?:\.\d+)?)s", message)
     delay = retry_after if retry_after is not None else (float(m.group(1)) if m else None)
     if "PerDay" in message or "per day" in message.lower() or (delay is not None and delay > MAX_RETRY_WAIT_S):
@@ -64,14 +66,16 @@ class Provider(Protocol):
 class GeminiProvider:
     """Google Gemini via the official `google-genai` SDK (free tier from AI Studio)."""
 
-    def __init__(self, model: str, api_key: str):
+    def __init__(self, model: str, api_key: str, timeout: float = 120):
         from google import genai  # lazy: only needed when Gemini is actually used
         from google.genai import types
 
         self.name = "gemini"
         self.model = model
-        # JSON mode (response_mime_type) is only enabled on v1beta for several models
-        self._client = genai.Client(api_key=api_key, http_options=types.HttpOptions(api_version="v1beta"))
+        # JSON mode (response_mime_type) is only enabled on v1beta for several models. The timeout
+        # matters: an overloaded model can hang for minutes before answering 504.
+        self._client = genai.Client(api_key=api_key, http_options=types.HttpOptions(
+            api_version="v1beta", timeout=int(timeout * 1000)))
 
     def complete(self, prompt: str, *, system: str | None, json_mode: bool, temperature: float,
                  images: list[bytes] | None = None) -> str:
@@ -347,7 +351,7 @@ def build_llm(config: Config, on_call: Callable[[str], None] | None = None, role
             log.debug("LLM provider %s skipped (%s unset)", spec.get("id", spec["name"]), spec["api_key_env"])
             continue
         if spec["name"] == "gemini":
-            prov: Provider = GeminiProvider(spec["model"], key)
+            prov: Provider = GeminiProvider(spec["model"], key, timeout=float(spec.get("timeout_s", 120)))
         else:
             prov = OpenAICompatProvider(spec["name"], spec["model"], key, spec["base_url"],
                                         json_format=spec.get("json_format", True), vision=spec.get("vision", False),

@@ -3,13 +3,10 @@ name: Daily Short
 on:
   schedule:
     # One Short per slot, up to channel.videos_per_day (config.yaml) per UTC day, so keep the
-    # number of lines here in step with it. Times are UTC (IST = UTC + 5:30). They're spread
-    # out so each Short gets its own audience instead of all of them landing at once.
-    # GitHub may start scheduled runs a few minutes late.
-    - cron: "17 3 * * *"    # 08:47 IST
-    - cron: "47 7 * * *"    # 13:17 IST
-    - cron: "47 12 * * *"   # 18:17 IST
-    - cron: "47 15 * * *"   # 21:17 IST
+    # number of slots in step with it. Times are UTC (IST = UTC + 5:30): every 2 hours from
+    # 02:47 to 16:47 UTC = 08:17 to 22:17 IST, 8 slots. Spread out so each Short gets its own
+    # audience instead of all of them landing at once. GitHub may start runs a few minutes late.
+    - cron: "47 2-16/2 * * *"
   workflow_dispatch:
     inputs:
       dry_run:
