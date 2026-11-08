@@ -1,0 +1,21 @@
+[
+  {
+    "ts": "2026-11-08T12:21:22+00:00",
+    "topic": "How do firecrackers produce bright colors and loud sound when lit?",
+    "title": "How Fireworks Paint the Sky and Make the Bang",
+    "run_id": "2026-11-08_video-tuntun-yadav-goldi-yadav-bam-fodeni-chhath-p",
+    "youtube_id": "dwui52-Bc1A",
+    "features": {
+      "hook": "A tiny metal change changes the whole show",
+      "hook_type": "stakes",
+      "trend_source": "youtube",
+      "words": 133,
+      "duration_s": 46.96,
+      "voice": "en-IN-NeerjaNeural",
+      "music": "inspired.mp3",
+      "experiment": {
+        "hook_type": "stakes"
+      }
+    }
+  }
+]

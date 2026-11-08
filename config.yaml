@@ -1,0 +1,102 @@
+channel:
+  niche: >-
+    Science & technology explained simply: surprising 'how does it work / why does
+    it happen' explainers about everyday tech, AI, space, physics, the human body,
+    engineering, and new discoveries.
+  language: "en"            # en | hi | te ...
+  audience: >-
+    Broad, curious general audience aged 16–35, mostly in India, no science
+    background, watching on a phone and deciding within 1–2 seconds whether to keep
+    watching or swipe away.
+  tone: "curious, clear, punchy, no hype, never clickbait lies"
+  videos_per_day: 1
+
+content:
+  target_words: [130, 160]   # spoken words across hook + beats + cta (~2.7 words/s)
+  hook_max_words: 8          # the hook must land within ~2 s
+  beats: [5, 7]              # one idea per beat, ~6–9 s each
+  on_screen_text_max_words: 5
+  max_script_attempts: 3     # format-validation retries for the script writer
+  max_factcheck_rewrites: 2  # per spec: abort after 2 failed rewrites
+  max_topic_attempts: 3      # research tries this many candidates before aborting
+  min_facts: 3
+  max_facts: 5
+  # Topics to avoid even if trending (wrong fit or brand-unsafe for an explainer channel)
+  avoid: ["politics", "elections", "celebrity gossip", "deaths or tragedies", "crime", "medical advice", "financial advice", "war"]
+
+trends:
+  youtube_region: "IN"
+  youtube_category_ids: []   # optional filter, e.g. [28] = Science & Technology (1 quota unit per id)
+  google_trends_geo: "IN"
+  subreddits: ["science", "technology", "explainlikeimfive"]
+  min_niche_relevance: 0.7   # LLM-scored 0–1
+  duplicate_similarity: 0.85 # fuzzy match threshold against the uploaded ledger
+  max_candidates_scored: 60  # candidates sent to the LLM for scoring (one call)
+  # If every trend source returns nothing (e.g. no API keys yet), ask the LLM for
+  # evergreen topics in the niche so the pipeline still produces something.
+  evergreen_fallback: true
+
+llm:
+  # Every model below is a free tier — no paid fallbacks. A provider whose API key env var
+  # is unset is skipped. Model names verified 2026-11-08; free models get retired, so if a
+  # run logs "model_not_found", run scripts/check_keys.py and update them here.
+  #
+  # Gemini free tier is ~20 requests/DAY per model, but each model has its own bucket, so
+  # chaining models multiplies the daily budget. A model that hits a daily limit is skipped
+  # until the quota resets. OpenRouter free models: ~50 requests/day per account (shared).
+  providers:
+    - {id: gemini35, name: gemini, model: "gemini-3.5-flash", api_key_env: GEMINI_API_KEY, rpm: 8}
+    - {id: gemini25, name: gemini, model: "gemini-2.5-flash", api_key_env: GEMINI_API_KEY, rpm: 8}
+    - {id: gemini35lite, name: gemini, model: "gemini-3.5-flash-lite", api_key_env: GEMINI_API_KEY, rpm: 12}
+    - {id: gemini31lite, name: gemini, model: "gemini-3.1-flash-lite", api_key_env: GEMINI_API_KEY, rpm: 12}
+    - {id: groq_oss, name: groq, model: "openai/gpt-oss-120b", api_key_env: GROQ_API_KEY,
+       base_url: "https://api.groq.com/openai/v1", rpm: 30}
+    # Reasoning model: low effort keeps a script call ~50 s instead of 10+ min, and max_tokens
+    # must leave room for the reasoning AND the JSON answer.
+    - {id: nemotron_ultra, name: openrouter, model: "nvidia/nemotron-3-ultra-550b-a55b:free",
+       api_key_env: OPENROUTER_API_KEY, base_url: "https://openrouter.ai/api/v1", rpm: 10, json_format: false,
+       timeout_s: 300, extra: {reasoning: {effort: low}, max_tokens: 6000}}
+    - {id: nemotron_vl, name: openrouter, model: "nvidia/nemotron-3.5-super-vl:free", vision: true,
+       api_key_env: OPENROUTER_API_KEY, base_url: "https://openrouter.ai/api/v1", rpm: 10,
+       timeout_s: 300, extra: {reasoning: {effort: low}, max_tokens: 4000}}
+    - {id: gemma, name: openrouter, model: "google/gemma-4-31b-it:free", api_key_env: OPENROUTER_API_KEY,
+       base_url: "https://openrouter.ai/api/v1", rpm: 10}
+
+  # Which models each job uses, in fallback order. Using different model families for
+  # writing and fact-checking means the checker doesn't share the writer's blind spots.
+  roles:
+    default: [gemini35, gemini25, gemini35lite, gemini31lite, groq_oss, gemma]   # trends, research, learning
+    writer:  [nemotron_ultra, gemini35, gemini25, groq_oss]                       # script + rewrites (Nemotron writes punchier)
+    checker: [groq_oss, gemini25, gemini35lite, gemini31lite]                     # factcheck
+    vision:  [gemini35lite, gemini31lite, gemini25, nemotron_vl]                  # footage picking
+  max_retries: 6
+  base_backoff_s: 2.0
+  max_backoff_s: 64.0
+  temperature: 0.7
+
+video:
+  duration_s: [45, 60]
+  resolution: [1080, 1920]
+  fps: 30
+  voice: "en-IN-NeerjaNeural"   # edge-tts voice
+  voice_rate_pct: 25            # starting speed; auto-adjusted to fit duration_s
+  music_dir: "assets/music"     # royalty-free tracks I add
+  font: "assets/fonts/Inter-Bold.ttf"
+
+upload:
+  youtube: true
+  instagram: false
+  youtube_privacy: "private"
+  auto_publish_after_audit: false
+
+review:
+  telegram: true
+
+learning:
+  min_age_days: 3        # analytics need a few days to settle
+  min_videos: 6          # public videos needed before the LLM writes a playbook
+  explore_rate: 0.3      # share of videos that try a non-best hook style
+
+paths:
+  runs_dir: "runs"                       # overridden by RUNS_DIR env var (e.g. Google Drive in Colab)
+  ledger: "data/uploaded_ledger.json"

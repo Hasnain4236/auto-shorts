@@ -1,0 +1,47 @@
+[
+  {
+    "file": "investigations.mp3",
+    "title": "Investigations",
+    "artist": "Kevin MacLeod",
+    "mood": "curious, mysterious",
+    "source": "https://incompetech.com",
+    "license": "CC BY 4.0",
+    "attribution": "Music: \"Investigations\" by Kevin MacLeod (incompetech.com)\nLicensed under Creative Commons: By Attribution 4.0 License\nhttp://creativecommons.org/licenses/by/4.0/"
+  },
+  {
+    "file": "wallpaper.mp3",
+    "title": "Wallpaper",
+    "artist": "Kevin MacLeod",
+    "mood": "upbeat electronic",
+    "source": "https://incompetech.com",
+    "license": "CC BY 4.0",
+    "attribution": "Music: \"Wallpaper\" by Kevin MacLeod (incompetech.com)\nLicensed under Creative Commons: By Attribution 4.0 License\nhttp://creativecommons.org/licenses/by/4.0/"
+  },
+  {
+    "file": "inspired.mp3",
+    "title": "Inspired",
+    "artist": "Kevin MacLeod",
+    "mood": "warm, uplifting",
+    "source": "https://incompetech.com",
+    "license": "CC BY 4.0",
+    "attribution": "Music: \"Inspired\" by Kevin MacLeod (incompetech.com)\nLicensed under Creative Commons: By Attribution 4.0 License\nhttp://creativecommons.org/licenses/by/4.0/"
+  },
+  {
+    "file": "easy-lemon.mp3",
+    "title": "Easy Lemon",
+    "artist": "Kevin MacLeod",
+    "mood": "light, positive",
+    "source": "https://incompetech.com",
+    "license": "CC BY 4.0",
+    "attribution": "Music: \"Easy Lemon\" by Kevin MacLeod (incompetech.com)\nLicensed under Creative Commons: By Attribution 4.0 License\nhttp://creativecommons.org/licenses/by/4.0/"
+  },
+  {
+    "file": "floating-cities.mp3",
+    "title": "Floating Cities",
+    "artist": "Kevin MacLeod",
+    "mood": "ambient, futuristic",
+    "source": "https://incompetech.com",
+    "license": "CC BY 4.0",
+    "attribution": "Music: \"Floating Cities\" by Kevin MacLeod (incompetech.com)\nLicensed under Creative Commons: By Attribution 4.0 License\nhttp://creativecommons.org/licenses/by/4.0/"
+  }
+]

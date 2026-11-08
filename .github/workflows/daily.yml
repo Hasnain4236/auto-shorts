@@ -1,0 +1,107 @@
+name: Daily Short
+
+on:
+  schedule:
+    - cron: "17 3 * * *"   # 03:17 UTC = 08:47 IST, every day (GitHub may start it a few minutes late)
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: "Dry run: make the video and send it to Telegram, but don't upload"
+        type: boolean
+        default: false
+
+permissions:
+  contents: write   # commit the ledger / analytics files back to the repo
+
+concurrency:
+  group: daily-short
+  cancel-in-progress: false
+
+jobs:
+  short:
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    env:
+      PYTHONUNBUFFERED: "1"
+      GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+      GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
+      OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
+      YOUTUBE_API_KEY: ${{ secrets.YOUTUBE_API_KEY }}
+      PEXELS_API_KEY: ${{ secrets.PEXELS_API_KEY }}
+      PIXABAY_API_KEY: ${{ secrets.PIXABAY_API_KEY }}
+      REDDIT_CLIENT_ID: ${{ secrets.REDDIT_CLIENT_ID }}
+      REDDIT_CLIENT_SECRET: ${{ secrets.REDDIT_CLIENT_SECRET }}
+      REDDIT_USER_AGENT: ${{ secrets.REDDIT_USER_AGENT }}
+      YOUTUBE_CLIENT_ID: ${{ secrets.YOUTUBE_CLIENT_ID }}
+      YOUTUBE_CLIENT_SECRET: ${{ secrets.YOUTUBE_CLIENT_SECRET }}
+      YOUTUBE_REFRESH_TOKEN: ${{ secrets.YOUTUBE_REFRESH_TOKEN }}
+      TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+      TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+
+      - name: Install FFmpeg
+        run: sudo apt-get update -qq && sudo apt-get install -y -qq ffmpeg
+
+      - name: Install Python packages
+        run: pip install -r requirements.txt
+
+      # Yesterday's runs folder: lets a failed run resume, and remembers which models
+      # hit their daily quota. The uploaded-topics ledger itself lives in git (data/).
+      - name: Restore previous runs
+        uses: actions/cache/restore@v4
+        with:
+          path: runs
+          key: runs-${{ github.run_id }}
+          restore-keys: runs-
+
+      - name: Learn from YouTube analytics
+        continue-on-error: true
+        run: python main.py learn
+
+      - name: Make today's Short
+        run: python main.py run ${{ inputs.dry_run && '--dry-run' || '' }}
+
+      - name: Prune old runs
+        if: always()
+        run: python main.py prune --keep-days 3
+
+      - name: Save runs for tomorrow
+        if: always()
+        uses: actions/cache/save@v4
+        with:
+          path: runs
+          key: runs-${{ github.run_id }}
+
+      - name: Find today's run folder
+        if: always()
+        run: echo "TODAY=$(date -u +%F)" >> "$GITHUB_ENV"
+
+      - name: Keep today's video as a download (7 days)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: short-${{ env.TODAY }}-${{ github.run_id }}
+          path: |
+            runs/${{ env.TODAY }}_*/final.mp4
+            runs/${{ env.TODAY }}_*/thumb.jpg
+            runs/${{ env.TODAY }}_*/*.json
+            runs/${{ env.TODAY }}_*/run.log
+          retention-days: 7
+          if-no-files-found: ignore
+
+      - name: Commit ledger and learning data
+        if: always()
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/
+          if git diff --cached --quiet; then echo "No data changes"; exit 0; fi
+          git commit -m "data: daily ledger/analytics update"
+          git pull --rebase --autostash
+          git push

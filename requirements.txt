@@ -1,0 +1,22 @@
+# Phase 1 — core
+pyyaml>=6.0
+python-dotenv>=1.0
+requests>=2.31
+google-genai>=1.0
+pytest>=8.0
+
+# Phase 2 — content (trends/research)
+pytrends>=4.9
+praw>=7.7
+google-api-python-client>=2.120
+
+# Phase 3 — media
+edge-tts>=6.1
+faster-whisper>=1.0
+Pillow>=10.0
+imageio-ffmpeg>=0.5     # bundled FFmpeg (with libass) when no system ffmpeg is installed
+# loudness normalisation (-16 LUFS) uses FFmpeg's loudnorm filter — no extra package
+
+# Phase 4 — distribution
+google-auth>=2.28
+google-auth-oauthlib>=1.2
