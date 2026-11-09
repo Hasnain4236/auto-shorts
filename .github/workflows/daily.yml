@@ -6,7 +6,16 @@ on:
     # number of slots in step with it. Times are UTC (IST = UTC + 5:30): every 2 hours from
     # 02:47 to 16:47 UTC = 08:17 to 22:17 IST, 8 slots. Spread out so each Short gets its own
     # audience instead of all of them landing at once. GitHub may start runs a few minutes late.
-    - cron: "47 2-16/2 * * *"
+    # Listed one by one: GitHub never fired the single "47 2-16/2" line (no scheduled run at all
+    # on 2026-11-09 morning), so the schedule is re-registered with plain entries.
+    - cron: "47 2 * * *"    # 08:17 IST
+    - cron: "47 4 * * *"    # 10:17 IST
+    - cron: "47 6 * * *"    # 12:17 IST
+    - cron: "47 8 * * *"    # 14:17 IST
+    - cron: "47 10 * * *"   # 16:17 IST
+    - cron: "47 12 * * *"   # 18:17 IST
+    - cron: "47 14 * * *"   # 20:17 IST
+    - cron: "47 16 * * *"   # 22:17 IST
   workflow_dispatch:
     inputs:
       dry_run:
