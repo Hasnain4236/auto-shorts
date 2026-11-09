@@ -97,5 +97,25 @@
         "hook_type": "stakes"
       }
     }
+  },
+  {
+    "ts": "2026-11-09T21:12:27+00:00",
+    "topic": "Why does heavy topspin cause a tennis ball to dip rapidly?",
+    "title": "Why Heavy Topspin Makes a Tennis Ball Plummet",
+    "run_id": "2026-11-09_why-does-heavy-topspin-cause-a-tennis-ball-to-dip",
+    "youtube_id": "d5VUTY6jOIc",
+    "publish_at": null,
+    "features": {
+      "hook": "Your serve could lose the point",
+      "hook_type": "stakes",
+      "trend_source": "google_trends",
+      "words": 133,
+      "duration_s": 52.19,
+      "voice": "en-IN-NeerjaNeural",
+      "music": "investigations.mp3",
+      "experiment": {
+        "hook_type": "stakes"
+      }
+    }
   }
 ]
