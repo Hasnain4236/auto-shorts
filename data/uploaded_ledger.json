@@ -77,5 +77,25 @@
         "hook_type": "stakes"
       }
     }
+  },
+  {
+    "ts": "2026-11-09T19:26:25+00:00",
+    "topic": "How do console upgrades like PS5 Pro boost gaming performance?",
+    "title": "How PS5 Pro uses AI to boost game performance",
+    "run_id": "2026-11-09_how-do-console-upgrades-like-ps5-pro-boost-gaming",
+    "youtube_id": "ME8luHOBffM",
+    "publish_at": null,
+    "features": {
+      "hook": "Your console is secretly lying to your eyes.",
+      "hook_type": "stakes",
+      "trend_source": "youtube",
+      "words": 136,
+      "duration_s": 50.95,
+      "voice": "en-IN-NeerjaNeural",
+      "music": "floating-cities.mp3",
+      "experiment": {
+        "hook_type": "stakes"
+      }
+    }
   }
 ]
