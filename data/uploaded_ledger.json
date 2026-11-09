@@ -137,5 +137,25 @@
         "hook_type": "counterintuitive"
       }
     }
+  },
+  {
+    "ts": "2026-11-09T23:41:14+00:00",
+    "topic": "How do games simulate massive physics interactions simultaneously?",
+    "title": "How Games Fake Massive Crashes Without Lag",
+    "run_id": "2026-11-09_how-do-games-simulate-massive-physics-interactions",
+    "youtube_id": "qgLX8F_Bmz0",
+    "publish_at": null,
+    "features": {
+      "hook": "The train never actually hits those cars",
+      "hook_type": "counterintuitive",
+      "trend_source": "youtube",
+      "words": 135,
+      "duration_s": 50.03,
+      "voice": "en-IN-NeerjaNeural",
+      "music": "floating-cities.mp3",
+      "experiment": {
+        "hook_type": "counterintuitive"
+      }
+    }
   }
 ]
