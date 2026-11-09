@@ -57,5 +57,25 @@
         "hook_type": "counterintuitive"
       }
     }
+  },
+  {
+    "ts": "2026-11-09T08:44:22+00:00",
+    "topic": "How do western disturbances trigger sudden winter rain and snowfall in Northern India?",
+    "title": "Why Winter Rain Appears Out of Nowhere in North India",
+    "run_id": "2026-11-09_how-do-western-disturbances-trigger-sudden-winter",
+    "youtube_id": "qMSyWWvmUr4",
+    "publish_at": null,
+    "features": {
+      "hook": "A storm travels continents to rain here.",
+      "hook_type": "stakes",
+      "trend_source": "google_trends",
+      "words": 132,
+      "duration_s": 52.36,
+      "voice": "en-IN-NeerjaNeural",
+      "music": "inspired.mp3",
+      "experiment": {
+        "hook_type": "stakes"
+      }
+    }
   }
 ]
