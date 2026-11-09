@@ -117,5 +117,25 @@
         "hook_type": "stakes"
       }
     }
+  },
+  {
+    "ts": "2026-11-09T22:54:12+00:00",
+    "topic": "How does Tesla's Cybertruck achieve its unique exoskeleton design?",
+    "title": "How Cybertruck’s Steel Skin Becomes an Exoskeleton",
+    "run_id": "2026-11-09_how-does-tesla-s-cybertruck-achieve-its-unique-exo",
+    "youtube_id": "xjM6fPqGsXE",
+    "publish_at": null,
+    "features": {
+      "hook": "This truck looks like a folded paper model.",
+      "hook_type": "counterintuitive",
+      "trend_source": "google_trends",
+      "words": 133,
+      "duration_s": 48.83,
+      "voice": "en-IN-NeerjaNeural",
+      "music": "inspired.mp3",
+      "experiment": {
+        "hook_type": "counterintuitive"
+      }
+    }
   }
 ]
