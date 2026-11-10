@@ -157,5 +157,25 @@
         "hook_type": "counterintuitive"
       }
     }
+  },
+  {
+    "ts": "2026-11-10T00:39:06+00:00",
+    "topic": "How do game mods change game mechanics and assets?",
+    "title": "How One Mod Turns a Block Into a Gun",
+    "run_id": "2026-11-10_how-do-game-mods-change-game-mechanics-and-assets",
+    "youtube_id": "imUguEcHgHA",
+    "publish_at": null,
+    "features": {
+      "hook": "A single block rewrites the game.",
+      "hook_type": "counterintuitive",
+      "trend_source": "youtube",
+      "words": 130,
+      "duration_s": 52.21,
+      "voice": "en-IN-NeerjaNeural",
+      "music": "floating-cities.mp3",
+      "experiment": {
+        "hook_type": "counterintuitive"
+      }
+    }
   }
 ]
