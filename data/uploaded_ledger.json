@@ -197,5 +197,25 @@
         "hook_type": "counterintuitive"
       }
     }
+  },
+  {
+    "ts": "2026-11-10T13:09:56+00:00",
+    "topic": "Why does a lit oil lamp flame always point upward regardless of tilt?",
+    "title": "Why a Tilted Lamp Flame Always Points Up",
+    "run_id": "2026-11-10_why-does-a-lit-oil-lamp-flame-always-point-upward",
+    "youtube_id": "ModCG3HQ41Y",
+    "publish_at": null,
+    "features": {
+      "hook": "Tilt a lamp, the flame stays stubborn.",
+      "hook_type": "counterintuitive",
+      "trend_source": "youtube",
+      "words": 133,
+      "duration_s": 46.63,
+      "voice": "en-IN-NeerjaNeural",
+      "music": "floating-cities.mp3",
+      "experiment": {
+        "hook_type": "counterintuitive"
+      }
+    }
   }
 ]
