@@ -257,5 +257,25 @@
         "hook_type": "counterintuitive"
       }
     }
+  },
+  {
+    "ts": "2026-11-10T18:33:10+00:00",
+    "topic": "How does haptic feedback make video games feel more real?",
+    "title": "How Controllers Make You Feel Every Crash",
+    "run_id": "2026-11-10_how-does-haptic-feedback-make-video-games-feel-mor",
+    "youtube_id": "4sVWz4fWwoA",
+    "publish_at": null,
+    "features": {
+      "hook": "Your hands could feel every in‑game impact",
+      "hook_type": "stakes",
+      "trend_source": "youtube",
+      "words": 141,
+      "duration_s": 46.49,
+      "voice": "en-IN-NeerjaNeural",
+      "music": "wallpaper.mp3",
+      "experiment": {
+        "hook_type": "stakes"
+      }
+    }
   }
 ]
