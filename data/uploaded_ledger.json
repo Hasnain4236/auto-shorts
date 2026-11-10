@@ -177,5 +177,25 @@
         "hook_type": "counterintuitive"
       }
     }
+  },
+  {
+    "ts": "2026-11-10T10:40:03+00:00",
+    "topic": "Why does the setting sun appear deep red and enlarged near horizon?",
+    "title": "Why the sunset looks huge and red",
+    "run_id": "2026-11-10_why-does-the-setting-sun-appear-deep-red-and-enlar",
+    "youtube_id": "S0SJM1RWXNA",
+    "publish_at": null,
+    "features": {
+      "hook": "The sun you see is already set.",
+      "hook_type": "counterintuitive",
+      "trend_source": "youtube",
+      "words": 132,
+      "duration_s": 52.33,
+      "voice": "en-IN-NeerjaNeural",
+      "music": "inspired.mp3",
+      "experiment": {
+        "hook_type": "counterintuitive"
+      }
+    }
   }
 ]
