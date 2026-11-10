@@ -277,5 +277,25 @@
         "hook_type": "stakes"
       }
     }
+  },
+  {
+    "ts": "2026-11-10T20:09:40+00:00",
+    "topic": "How does AI analyze vast data for open-source intelligence?",
+    "title": "How AI Reads Millions of Posts and Misses the Truth",
+    "run_id": "2026-11-10_how-does-ai-analyze-vast-data-for-open-source-inte",
+    "youtube_id": "CuX6_Jp-m-w",
+    "publish_at": null,
+    "features": {
+      "hook": "More data can actually hide the truth",
+      "hook_type": "counterintuitive",
+      "trend_source": "google_trends",
+      "words": 137,
+      "duration_s": 47.66,
+      "voice": "en-IN-NeerjaNeural",
+      "music": "floating-cities.mp3",
+      "experiment": {
+        "hook_type": "counterintuitive"
+      }
+    }
   }
 ]
