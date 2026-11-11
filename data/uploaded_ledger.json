@@ -417,5 +417,25 @@
         "hook_type": "stakes"
       }
     }
+  },
+  {
+    "ts": "2026-11-11T23:13:40+00:00",
+    "topic": "How do meteorologists predict heavy rain and floods accurately?",
+    "title": "How radar and supercomputers predict heavy rain",
+    "run_id": "2026-11-11_how-do-meteorologists-predict-heavy-rain-and-flood",
+    "youtube_id": "rPG-I_MErjw",
+    "publish_at": null,
+    "features": {
+      "hook": "Radar warnings saved thousands.",
+      "hook_type": "counterintuitive",
+      "trend_source": "google_trends",
+      "words": 157,
+      "duration_s": 59.46,
+      "voice": "en-IN-NeerjaNeural",
+      "music": "easy-lemon.mp3",
+      "experiment": {
+        "hook_type": "counterintuitive"
+      }
+    }
   }
 ]
