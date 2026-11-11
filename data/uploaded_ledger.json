@@ -317,5 +317,25 @@
         "hook_type": "counterintuitive"
       }
     }
+  },
+  {
+    "ts": "2026-11-11T10:05:43+00:00",
+    "topic": "Why is pure 24-karat gold too soft for jewelry, requiring metal alloying?",
+    "title": "Why Pure Gold Bends Like a Paperclip",
+    "run_id": "2026-11-11_why-is-pure-24-karat-gold-too-soft-for-jewelry-req",
+    "youtube_id": "CdaX0BvbvuY",
+    "publish_at": null,
+    "features": {
+      "hook": "Pure gold bends like a paperclip.",
+      "hook_type": "counterintuitive",
+      "trend_source": "google_trends",
+      "words": 130,
+      "duration_s": 45.6,
+      "voice": "en-IN-NeerjaNeural",
+      "music": "easy-lemon.mp3",
+      "experiment": {
+        "hook_type": "counterintuitive"
+      }
+    }
   }
 ]
