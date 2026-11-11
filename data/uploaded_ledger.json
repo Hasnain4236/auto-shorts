@@ -357,5 +357,25 @@
         "hook_type": "question"
       }
     }
+  },
+  {
+    "ts": "2026-11-11T18:11:48+00:00",
+    "topic": "Why does the human brain constantly notice repeating numbers like 11:11?",
+    "title": "Why Your Brain Keeps Spotting 11:11",
+    "run_id": "2026-11-11_why-does-the-human-brain-constantly-notice-repeati",
+    "youtube_id": "6DTANoIkGQM",
+    "publish_at": null,
+    "features": {
+      "hook": "Why do you always notice 11:11 everywhere?",
+      "hook_type": "question",
+      "trend_source": "google_trends",
+      "words": 132,
+      "duration_s": 46.01,
+      "voice": "en-IN-NeerjaNeural",
+      "music": "easy-lemon.mp3",
+      "experiment": {
+        "hook_type": "question"
+      }
+    }
   }
 ]
