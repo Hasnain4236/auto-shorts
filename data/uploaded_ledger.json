@@ -397,5 +397,25 @@
         "hook_type": "question"
       }
     }
+  },
+  {
+    "ts": "2026-11-11T21:44:20+00:00",
+    "topic": "Why does AI-generated video sometimes look 'sloppy' or 'uncanny'?",
+    "title": "The Real Reason AI Faces Creep You Out",
+    "run_id": "2026-11-11_why-does-ai-generated-video-sometimes-look-sloppy",
+    "youtube_id": "_WCTT-PjFKs",
+    "publish_at": null,
+    "features": {
+      "hook": "That creepy AI face? Your brain feels uneasy.",
+      "hook_type": "stakes",
+      "trend_source": "youtube",
+      "words": 130,
+      "duration_s": 50.02,
+      "voice": "en-IN-NeerjaNeural",
+      "music": "floating-cities.mp3",
+      "experiment": {
+        "hook_type": "stakes"
+      }
+    }
   }
 ]
