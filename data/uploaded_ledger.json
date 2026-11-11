@@ -337,5 +337,25 @@
         "hook_type": "counterintuitive"
       }
     }
+  },
+  {
+    "ts": "2026-11-11T12:33:26+00:00",
+    "topic": "How do AI video generators synthesize realistic human motion from text prompts?",
+    "title": "How AI Turns Text Into Realistic Human Motion",
+    "run_id": "2026-11-11_how-do-ai-video-generators-synthesize-realistic-hu",
+    "youtube_id": "8NOetqGZEc4",
+    "publish_at": null,
+    "features": {
+      "hook": "How does AI turn words into walking people?",
+      "hook_type": "question",
+      "trend_source": "youtube",
+      "words": 154,
+      "duration_s": 58.72,
+      "voice": "en-IN-NeerjaNeural",
+      "music": "wallpaper.mp3",
+      "experiment": {
+        "hook_type": "question"
+      }
+    }
   }
 ]
