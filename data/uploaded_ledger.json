@@ -377,5 +377,25 @@
         "hook_type": "question"
       }
     }
+  },
+  {
+    "ts": "2026-11-11T20:10:40+00:00",
+    "topic": "How do open-world games like GTA create such vast, seamless maps?",
+    "title": "How open worlds load seamlessly",
+    "run_id": "2026-11-11_how-do-open-world-games-like-gta-create-such-vast",
+    "youtube_id": "B_fewtmL4rU",
+    "publish_at": null,
+    "features": {
+      "hook": "How does GTA load a whole city?",
+      "hook_type": "question",
+      "trend_source": "youtube",
+      "words": 132,
+      "duration_s": 52.19,
+      "voice": "en-IN-NeerjaNeural",
+      "music": "investigations.mp3",
+      "experiment": {
+        "hook_type": "question"
+      }
+    }
   }
 ]
