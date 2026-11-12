@@ -537,5 +537,25 @@
         "hook_type": "question"
       }
     }
+  },
+  {
+    "ts": "2026-11-12T20:38:55+00:00",
+    "topic": "How do GTA games simulate realistic city traffic and NPC behavior?",
+    "title": "How GTA fakes realistic traffic without true AI",
+    "run_id": "2026-11-12_how-do-gta-games-simulate-realistic-city-traffic-a",
+    "youtube_id": "prcItmRs6lg",
+    "publish_at": null,
+    "features": {
+      "hook": "Why do GTA cars never get stuck?",
+      "hook_type": "question",
+      "trend_source": "youtube",
+      "words": 139,
+      "duration_s": 50.6,
+      "voice": "en-IN-NeerjaNeural",
+      "music": "floating-cities.mp3",
+      "experiment": {
+        "hook_type": "question"
+      }
+    }
   }
 ]
