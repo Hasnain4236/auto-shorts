@@ -437,5 +437,25 @@
         "hook_type": "counterintuitive"
       }
     }
+  },
+  {
+    "ts": "2026-11-12T10:30:23+00:00",
+    "topic": "How do racing games mathematically calculate tire grip and drifting physics?",
+    "title": "How Games Mathematically Calculate Tire Grip and Drifting",
+    "run_id": "2026-11-12_how-do-racing-games-mathematically-calculate-tire",
+    "youtube_id": "J1yRRzCoimY",
+    "publish_at": null,
+    "features": {
+      "hook": "How does your car know to slide",
+      "hook_type": "question",
+      "trend_source": "youtube",
+      "words": 134,
+      "duration_s": 50.17,
+      "voice": "en-IN-NeerjaNeural",
+      "music": "easy-lemon.mp3",
+      "experiment": {
+        "hook_type": "question"
+      }
+    }
   }
 ]

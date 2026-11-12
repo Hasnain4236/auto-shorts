@@ -1,4 +1,526 @@
 {
-  "updated": "2026-11-11T12:11:23+00:00",
-  "videos": []
+  "updated": "2026-11-12T10:22:54+00:00",
+  "videos": [
+    {
+      "video_id": "dwui52-Bc1A",
+      "age_days": 3,
+      "topic": "How do firecrackers produce bright colors and loud sound when lit?",
+      "title": "How Fireworks Paint the Sky and Make the Bang",
+      "features": {
+        "hook": "A tiny metal change changes the whole show",
+        "hook_type": "stakes",
+        "trend_source": "youtube",
+        "words": 133,
+        "duration_s": 46.96,
+        "voice": "en-IN-NeerjaNeural",
+        "music": "inspired.mp3",
+        "experiment": {
+          "hook_type": "stakes"
+        }
+      },
+      "views": 65,
+      "estimatedMinutesWatched": 6,
+      "averageViewDuration": 23,
+      "averageViewPercentage": 50.1,
+      "likes": 1,
+      "shares": 0,
+      "comments": 0,
+      "subscribersGained": 0,
+      "engagedViews": 14,
+      "hook_hold": 1.1429,
+      "mid_hold": 0.4286,
+      "end_hold": 0.2857,
+      "biggest_drop_at": 0.12,
+      "retention": [
+        [
+          0.01,
+          1.1429
+        ],
+        [
+          0.02,
+          1.1429
+        ],
+        [
+          0.03,
+          1.1429
+        ],
+        [
+          0.04,
+          1.1429
+        ],
+        [
+          0.05,
+          1.1429
+        ],
+        [
+          0.06,
+          1.1429
+        ],
+        [
+          0.07,
+          1.1429
+        ],
+        [
+          0.08,
+          1.1429
+        ],
+        [
+          0.09,
+          1.1429
+        ],
+        [
+          0.1,
+          1.0714
+        ],
+        [
+          0.11,
+          1.0
+        ],
+        [
+          0.12,
+          0.7857
+        ],
+        [
+          0.13,
+          0.7857
+        ],
+        [
+          0.14,
+          0.7143
+        ],
+        [
+          0.15,
+          0.7143
+        ],
+        [
+          0.16,
+          0.6429
+        ],
+        [
+          0.17,
+          0.6429
+        ],
+        [
+          0.18,
+          0.6429
+        ],
+        [
+          0.19,
+          0.6429
+        ],
+        [
+          0.2,
+          0.6429
+        ],
+        [
+          0.21,
+          0.5
+        ],
+        [
+          0.22,
+          0.5
+        ],
+        [
+          0.23,
+          0.5
+        ],
+        [
+          0.24,
+          0.5
+        ],
+        [
+          0.25,
+          0.5
+        ],
+        [
+          0.26,
+          0.5
+        ],
+        [
+          0.27,
+          0.5
+        ],
+        [
+          0.28,
+          0.5
+        ],
+        [
+          0.29,
+          0.5
+        ],
+        [
+          0.3,
+          0.5
+        ],
+        [
+          0.31,
+          0.5
+        ],
+        [
+          0.32,
+          0.5
+        ],
+        [
+          0.33,
+          0.5
+        ],
+        [
+          0.34,
+          0.5
+        ],
+        [
+          0.35,
+          0.5
+        ],
+        [
+          0.36,
+          0.5
+        ],
+        [
+          0.37,
+          0.5
+        ],
+        [
+          0.38,
+          0.5
+        ],
+        [
+          0.39,
+          0.5
+        ],
+        [
+          0.4,
+          0.5
+        ],
+        [
+          0.41,
+          0.4286
+        ],
+        [
+          0.42,
+          0.4286
+        ],
+        [
+          0.43,
+          0.4286
+        ],
+        [
+          0.44,
+          0.4286
+        ],
+        [
+          0.45,
+          0.4286
+        ],
+        [
+          0.46,
+          0.4286
+        ],
+        [
+          0.47,
+          0.4286
+        ],
+        [
+          0.48,
+          0.4286
+        ],
+        [
+          0.49,
+          0.4286
+        ],
+        [
+          0.5,
+          0.4286
+        ],
+        [
+          0.51,
+          0.4286
+        ],
+        [
+          0.52,
+          0.4286
+        ],
+        [
+          0.53,
+          0.4286
+        ],
+        [
+          0.54,
+          0.5
+        ],
+        [
+          0.55,
+          0.5
+        ],
+        [
+          0.56,
+          0.4286
+        ],
+        [
+          0.57,
+          0.4286
+        ],
+        [
+          0.58,
+          0.35710000000000003
+        ],
+        [
+          0.59,
+          0.35710000000000003
+        ],
+        [
+          0.6,
+          0.35710000000000003
+        ],
+        [
+          0.61,
+          0.35710000000000003
+        ],
+        [
+          0.62,
+          0.35710000000000003
+        ],
+        [
+          0.63,
+          0.35710000000000003
+        ],
+        [
+          0.64,
+          0.35710000000000003
+        ],
+        [
+          0.65,
+          0.35710000000000003
+        ],
+        [
+          0.66,
+          0.35710000000000003
+        ],
+        [
+          0.67,
+          0.35710000000000003
+        ],
+        [
+          0.68,
+          0.35710000000000003
+        ],
+        [
+          0.69,
+          0.35710000000000003
+        ],
+        [
+          0.7,
+          0.35710000000000003
+        ],
+        [
+          0.71,
+          0.35710000000000003
+        ],
+        [
+          0.72,
+          0.35710000000000003
+        ],
+        [
+          0.73,
+          0.35710000000000003
+        ],
+        [
+          0.74,
+          0.35710000000000003
+        ],
+        [
+          0.75,
+          0.35710000000000003
+        ],
+        [
+          0.76,
+          0.35710000000000003
+        ],
+        [
+          0.77,
+          0.35710000000000003
+        ],
+        [
+          0.78,
+          0.35710000000000003
+        ],
+        [
+          0.79,
+          0.35710000000000003
+        ],
+        [
+          0.8,
+          0.35710000000000003
+        ],
+        [
+          0.81,
+          0.35710000000000003
+        ],
+        [
+          0.82,
+          0.35710000000000003
+        ],
+        [
+          0.83,
+          0.35710000000000003
+        ],
+        [
+          0.84,
+          0.35710000000000003
+        ],
+        [
+          0.85,
+          0.35710000000000003
+        ],
+        [
+          0.86,
+          0.35710000000000003
+        ],
+        [
+          0.87,
+          0.35710000000000003
+        ],
+        [
+          0.88,
+          0.35710000000000003
+        ],
+        [
+          0.89,
+          0.35710000000000003
+        ],
+        [
+          0.9,
+          0.35710000000000003
+        ],
+        [
+          0.91,
+          0.35710000000000003
+        ],
+        [
+          0.92,
+          0.35710000000000003
+        ],
+        [
+          0.93,
+          0.2857
+        ],
+        [
+          0.94,
+          0.2857
+        ],
+        [
+          0.95,
+          0.2857
+        ],
+        [
+          0.96,
+          0.2857
+        ],
+        [
+          0.97,
+          0.2857
+        ],
+        [
+          0.98,
+          0.2857
+        ],
+        [
+          0.99,
+          0.2857
+        ],
+        [
+          1.0,
+          0.2857
+        ]
+      ],
+      "score": 1.0
+    },
+    {
+      "video_id": "5BeLvrJd-Yw",
+      "age_days": 3,
+      "topic": "Why do artificial intelligence models consume enormous amounts of electric power?",
+      "title": "Could AI Data Centers Dry Up Wells?",
+      "features": {
+        "hook": "Could AI dry up your well?",
+        "hook_type": "stakes",
+        "trend_source": "google_trends",
+        "words": 150,
+        "duration_s": 52.25,
+        "voice": "en-IN-NeerjaNeural",
+        "music": "wallpaper.mp3",
+        "experiment": {
+          "hook_type": "stakes"
+        }
+      },
+      "views": 33,
+      "estimatedMinutesWatched": 2,
+      "averageViewDuration": 9,
+      "averageViewPercentage": 18.8,
+      "likes": 0,
+      "shares": 0,
+      "comments": 0,
+      "subscribersGained": 0,
+      "engagedViews": 9,
+      "retention": [],
+      "score": 0.233
+    },
+    {
+      "video_id": "QYHa4KCSXFk",
+      "age_days": 3,
+      "topic": "How do video games realistically simulate car crashes and physics?",
+      "title": "Your Game Car Has Invisible Bones",
+      "features": {
+        "hook": "That car has invisible bones inside",
+        "hook_type": "counterintuitive",
+        "trend_source": "youtube",
+        "words": 132,
+        "duration_s": 54.35,
+        "voice": "en-IN-NeerjaNeural",
+        "music": "easy-lemon.mp3",
+        "experiment": {
+          "hook_type": "counterintuitive"
+        }
+      },
+      "views": 3,
+      "estimatedMinutesWatched": 0,
+      "averageViewDuration": 21,
+      "averageViewPercentage": 39.2,
+      "likes": 0,
+      "shares": 0,
+      "comments": 0,
+      "subscribersGained": 0,
+      "engagedViews": 1,
+      "retention": [],
+      "score": 0.217
+    },
+    {
+      "video_id": "qMSyWWvmUr4",
+      "age_days": 3,
+      "topic": "How do western disturbances trigger sudden winter rain and snowfall in Northern India?",
+      "title": "Why Winter Rain Appears Out of Nowhere in North India",
+      "features": {
+        "hook": "A storm travels continents to rain here.",
+        "hook_type": "stakes",
+        "trend_source": "google_trends",
+        "words": 132,
+        "duration_s": 52.36,
+        "voice": "en-IN-NeerjaNeural",
+        "music": "inspired.mp3",
+        "experiment": {
+          "hook_type": "stakes"
+        }
+      },
+      "views": 21,
+      "estimatedMinutesWatched": 3,
+      "averageViewDuration": 24,
+      "averageViewPercentage": 46.55,
+      "likes": 1,
+      "shares": 0,
+      "comments": 0,
+      "subscribersGained": 0,
+      "engagedViews": 9,
+      "retention": [],
+      "score": 0.55
+    }
+  ]
 }
