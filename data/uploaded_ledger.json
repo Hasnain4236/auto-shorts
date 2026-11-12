@@ -457,5 +457,25 @@
         "hook_type": "question"
       }
     }
+  },
+  {
+    "ts": "2026-11-12T13:25:53+00:00",
+    "topic": "How do warm ocean waters trigger spinning cyclone storms in Bay of Bengal?",
+    "title": "How Warm Bay of Bengal Water Fuels Cyclones",
+    "run_id": "2026-11-12_how-do-warm-ocean-waters-trigger-spinning-cyclone",
+    "youtube_id": "4BPmOU7qQKo",
+    "publish_at": null,
+    "features": {
+      "hook": "Why does hot water spin giant storms?",
+      "hook_type": "question",
+      "trend_source": "google_trends",
+      "words": 131,
+      "duration_s": 52.02,
+      "voice": "en-IN-NeerjaNeural",
+      "music": "floating-cities.mp3",
+      "experiment": {
+        "hook_type": "question"
+      }
+    }
   }
 ]
