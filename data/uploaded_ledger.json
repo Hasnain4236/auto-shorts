@@ -517,5 +517,25 @@
         "hook_type": "question"
       }
     }
+  },
+  {
+    "ts": "2026-11-12T18:56:08+00:00",
+    "topic": "How do \"agentic workflows\" make new AI models like Gemini 4 faster?",
+    "title": "Why Your New AI Feels Twice as Fast",
+    "run_id": "2026-11-12_how-do-agentic-workflows-make-new-ai-models-like-g",
+    "youtube_id": "OZojJgWbxKY",
+    "publish_at": null,
+    "features": {
+      "hook": "Why's your new AI suddenly twice as fast?",
+      "hook_type": "question",
+      "trend_source": "google_trends",
+      "words": 131,
+      "duration_s": 45.61,
+      "voice": "en-IN-NeerjaNeural",
+      "music": "investigations.mp3",
+      "experiment": {
+        "hook_type": "question"
+      }
+    }
   }
 ]
