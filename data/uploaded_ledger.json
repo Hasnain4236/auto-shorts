@@ -477,5 +477,25 @@
         "hook_type": "question"
       }
     }
+  },
+  {
+    "ts": "2026-11-12T15:47:24+00:00",
+    "topic": "How do server CPUs package dozens of smaller chiplets into one processor?",
+    "title": "How server CPUs pack multiple chiplets into one",
+    "run_id": "2026-11-12_how-do-server-cpus-package-dozens-of-smaller-chipl",
+    "youtube_id": "3d2oftbaMXg",
+    "publish_at": null,
+    "features": {
+      "hook": "A single chip hides a tiny city",
+      "hook_type": "counterintuitive",
+      "trend_source": "google_trends",
+      "words": 130,
+      "duration_s": 49.39,
+      "voice": "en-IN-NeerjaNeural",
+      "music": "wallpaper.mp3",
+      "experiment": {
+        "hook_type": "counterintuitive"
+      }
+    }
   }
 ]
