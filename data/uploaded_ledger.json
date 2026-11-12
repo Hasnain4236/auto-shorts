@@ -577,5 +577,25 @@
         "hook_type": "counterintuitive"
       }
     }
+  },
+  {
+    "ts": "2026-11-12T22:35:29+00:00",
+    "topic": "How does Minecraft generate infinite, unique worlds?",
+    "title": "How a Tiny Seed Creates Virtually Unlimited Minecraft Worlds",
+    "run_id": "2026-11-12_how-does-minecraft-generate-infinite-unique-worlds",
+    "youtube_id": "ri_pcy2pH3Y",
+    "publish_at": null,
+    "features": {
+      "hook": "Your Minecraft world fits in a sentence.",
+      "hook_type": "counterintuitive",
+      "trend_source": "youtube",
+      "words": 139,
+      "duration_s": 58.88,
+      "voice": "en-IN-NeerjaNeural",
+      "music": "inspired.mp3",
+      "experiment": {
+        "hook_type": "counterintuitive"
+      }
+    }
   }
 ]
