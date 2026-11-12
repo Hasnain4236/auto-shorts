@@ -497,5 +497,25 @@
         "hook_type": "counterintuitive"
       }
     }
+  },
+  {
+    "ts": "2026-11-12T17:27:23+00:00",
+    "topic": "How does the Magnus effect cause a kicked soccer ball to curve in mid-air?",
+    "title": "Why a Spinning Soccer Ball Curves in Mid‑Air",
+    "run_id": "2026-11-12_how-does-the-magnus-effect-cause-a-kicked-soccer-b",
+    "youtube_id": "Rp7gnYoBkCE",
+    "publish_at": null,
+    "features": {
+      "hook": "Why does a spinning ball bend mid‑air?",
+      "hook_type": "question",
+      "trend_source": "google_trends",
+      "words": 130,
+      "duration_s": 52.13,
+      "voice": "en-IN-NeerjaNeural",
+      "music": "floating-cities.mp3",
+      "experiment": {
+        "hook_type": "question"
+      }
+    }
   }
 ]
