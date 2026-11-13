@@ -717,5 +717,25 @@
         "hook_type": "question"
       }
     }
+  },
+  {
+    "ts": "2026-11-13T21:07:18+00:00",
+    "topic": "How do game updates add new features without breaking old ones?",
+    "title": "How Game Updates Add Features Without Breaking Old Saves",
+    "run_id": "2026-11-13_how-do-game-updates-add-new-features-without-break",
+    "youtube_id": "PrX4bd4dOkI",
+    "publish_at": null,
+    "features": {
+      "hook": "Why don't game updates break your old progress?",
+      "hook_type": "question",
+      "trend_source": "youtube",
+      "words": 142,
+      "duration_s": 53.65,
+      "voice": "en-IN-NeerjaNeural",
+      "music": "wallpaper.mp3",
+      "experiment": {
+        "hook_type": "question"
+      }
+    }
   }
 ]
