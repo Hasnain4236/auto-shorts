@@ -677,5 +677,25 @@
         "hook_type": "question"
       }
     }
+  },
+  {
+    "ts": "2026-11-13T18:15:17+00:00",
+    "topic": "How do smartphone cameras capture such detailed photos?",
+    "title": "How Your Phone Captures Impressive Photo Detail",
+    "run_id": "2026-11-13_how-do-smartphone-cameras-capture-such-detailed-ph",
+    "youtube_id": "-s-XN0h0Q0U",
+    "publish_at": null,
+    "features": {
+      "hook": "Why do phone photos look so sharp?",
+      "hook_type": "question",
+      "trend_source": "google_trends",
+      "words": 132,
+      "duration_s": 49.63,
+      "voice": "en-IN-NeerjaNeural",
+      "music": "inspired.mp3",
+      "experiment": {
+        "hook_type": "question"
+      }
+    }
   }
 ]
