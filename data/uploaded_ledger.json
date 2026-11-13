@@ -657,5 +657,25 @@
         "hook_type": "question"
       }
     }
+  },
+  {
+    "ts": "2026-11-13T16:53:36+00:00",
+    "topic": "How do polar vortex and El Niño affect global winter weather?",
+    "title": "Why This Winter Feels So Extreme",
+    "run_id": "2026-11-13_how-do-polar-vortex-and-el-ni-o-affect-global-wint",
+    "youtube_id": "1AdlVaMFCiY",
+    "publish_at": null,
+    "features": {
+      "hook": "Why is this winter so unusually cold?",
+      "hook_type": "question",
+      "trend_source": "google_trends",
+      "words": 132,
+      "duration_s": 52.22,
+      "voice": "en-IN-NeerjaNeural",
+      "music": "easy-lemon.mp3",
+      "experiment": {
+        "hook_type": "question"
+      }
+    }
   }
 ]
