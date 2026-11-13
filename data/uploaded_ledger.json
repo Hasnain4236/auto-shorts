@@ -637,5 +637,25 @@
         "hook_type": "question"
       }
     }
+  },
+  {
+    "ts": "2026-11-13T15:12:16+00:00",
+    "topic": "How do OS updates change how your phone hardware works?",
+    "title": "How an OS Update Improves Your Phone's Performance",
+    "run_id": "2026-11-13_how-do-os-updates-change-how-your-phone-hardware-w",
+    "youtube_id": "GEMv-T-LTe0",
+    "publish_at": null,
+    "features": {
+      "hook": "What makes your phone suddenly feel smoother?",
+      "hook_type": "question",
+      "trend_source": "google_trends",
+      "words": 130,
+      "duration_s": 47.45,
+      "voice": "en-IN-NeerjaNeural",
+      "music": "wallpaper.mp3",
+      "experiment": {
+        "hook_type": "question"
+      }
+    }
   }
 ]
