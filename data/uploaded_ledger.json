@@ -617,5 +617,25 @@
         "hook_type": "question"
       }
     }
+  },
+  {
+    "ts": "2026-11-13T12:46:24+00:00",
+    "topic": "How does ball seam orientation and surface turbulence create swing in cricket?",
+    "title": "Why a Cricket Ball Swings Mid‑Air",
+    "run_id": "2026-11-13_how-does-ball-seam-orientation-and-surface-turbule",
+    "youtube_id": "G7cWq3Hrnys",
+    "publish_at": null,
+    "features": {
+      "hook": "Ever wonder why a cricket ball secretly dances?",
+      "hook_type": "question",
+      "trend_source": "google_trends",
+      "words": 131,
+      "duration_s": 52.03,
+      "voice": "en-IN-NeerjaNeural",
+      "music": "floating-cities.mp3",
+      "experiment": {
+        "hook_type": "question"
+      }
+    }
   }
 ]
