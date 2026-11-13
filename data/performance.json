@@ -1,9 +1,9 @@
 {
-  "updated": "2026-11-12T10:22:54+00:00",
+  "updated": "2026-11-13T10:03:45+00:00",
   "videos": [
     {
       "video_id": "dwui52-Bc1A",
-      "age_days": 3,
+      "age_days": 4,
       "topic": "How do firecrackers produce bright colors and loud sound when lit?",
       "title": "How Fireworks Paint the Sky and Make the Bang",
       "features": {
@@ -18,426 +18,426 @@
           "hook_type": "stakes"
         }
       },
-      "views": 65,
+      "views": 69,
       "estimatedMinutesWatched": 6,
-      "averageViewDuration": 23,
-      "averageViewPercentage": 50.1,
+      "averageViewDuration": 22,
+      "averageViewPercentage": 47.43,
       "likes": 1,
       "shares": 0,
       "comments": 0,
       "subscribersGained": 0,
-      "engagedViews": 14,
-      "hook_hold": 1.1429,
-      "mid_hold": 0.4286,
-      "end_hold": 0.2857,
+      "engagedViews": 15,
+      "hook_hold": 1.1333,
+      "mid_hold": 0.4,
+      "end_hold": 0.2667,
       "biggest_drop_at": 0.12,
       "retention": [
         [
           0.01,
-          1.1429
+          1.1333
         ],
         [
           0.02,
-          1.1429
+          1.1333
         ],
         [
           0.03,
-          1.1429
+          1.1333
         ],
         [
           0.04,
-          1.1429
+          1.1333
         ],
         [
           0.05,
-          1.1429
+          1.1333
         ],
         [
           0.06,
-          1.1429
+          1.1333
         ],
         [
           0.07,
-          1.1429
+          1.1333
         ],
         [
           0.08,
-          1.1429
+          1.1333
         ],
         [
           0.09,
-          1.1429
+          1.1333
         ],
         [
           0.1,
-          1.0714
+          1.0667
         ],
         [
           0.11,
-          1.0
+          0.9333
         ],
         [
           0.12,
-          0.7857
+          0.7333
         ],
         [
           0.13,
-          0.7857
+          0.7333
         ],
         [
           0.14,
-          0.7143
+          0.6667000000000001
         ],
         [
           0.15,
-          0.7143
+          0.6667000000000001
         ],
         [
           0.16,
-          0.6429
+          0.6
         ],
         [
           0.17,
-          0.6429
+          0.6
         ],
         [
           0.18,
-          0.6429
+          0.6
         ],
         [
           0.19,
-          0.6429
+          0.6
         ],
         [
           0.2,
-          0.6429
+          0.6
         ],
         [
           0.21,
-          0.5
+          0.4667
         ],
         [
           0.22,
-          0.5
+          0.4667
         ],
         [
           0.23,
-          0.5
+          0.4667
         ],
         [
           0.24,
-          0.5
+          0.4667
         ],
         [
           0.25,
-          0.5
+          0.4667
         ],
         [
           0.26,
-          0.5
+          0.4667
         ],
         [
           0.27,
-          0.5
+          0.4667
         ],
         [
           0.28,
-          0.5
+          0.4667
         ],
         [
           0.29,
-          0.5
+          0.4667
         ],
         [
           0.3,
-          0.5
+          0.4667
         ],
         [
           0.31,
-          0.5
+          0.4667
         ],
         [
           0.32,
-          0.5
+          0.4667
         ],
         [
           0.33,
-          0.5
+          0.4667
         ],
         [
           0.34,
-          0.5
+          0.4667
         ],
         [
           0.35,
-          0.5
+          0.4667
         ],
         [
           0.36,
-          0.5
+          0.4667
         ],
         [
           0.37,
-          0.5
+          0.4667
         ],
         [
           0.38,
-          0.5
+          0.4667
         ],
         [
           0.39,
-          0.5
+          0.4667
         ],
         [
           0.4,
-          0.5
+          0.4667
         ],
         [
           0.41,
-          0.4286
+          0.4
         ],
         [
           0.42,
-          0.4286
+          0.4
         ],
         [
           0.43,
-          0.4286
+          0.4
         ],
         [
           0.44,
-          0.4286
+          0.4
         ],
         [
           0.45,
-          0.4286
+          0.4
         ],
         [
           0.46,
-          0.4286
+          0.4
         ],
         [
           0.47,
-          0.4286
+          0.4
         ],
         [
           0.48,
-          0.4286
+          0.4
         ],
         [
           0.49,
-          0.4286
+          0.4
         ],
         [
           0.5,
-          0.4286
+          0.4
         ],
         [
           0.51,
-          0.4286
+          0.4
         ],
         [
           0.52,
-          0.4286
+          0.4
         ],
         [
           0.53,
-          0.4286
+          0.4
         ],
         [
           0.54,
-          0.5
+          0.4667
         ],
         [
           0.55,
-          0.5
+          0.4667
         ],
         [
           0.56,
-          0.4286
+          0.4
         ],
         [
           0.57,
-          0.4286
+          0.4
         ],
         [
           0.58,
-          0.35710000000000003
+          0.3333
         ],
         [
           0.59,
-          0.35710000000000003
+          0.3333
         ],
         [
           0.6,
-          0.35710000000000003
+          0.3333
         ],
         [
           0.61,
-          0.35710000000000003
+          0.3333
         ],
         [
           0.62,
-          0.35710000000000003
+          0.3333
         ],
         [
           0.63,
-          0.35710000000000003
+          0.3333
         ],
         [
           0.64,
-          0.35710000000000003
+          0.3333
         ],
         [
           0.65,
-          0.35710000000000003
+          0.3333
         ],
         [
           0.66,
-          0.35710000000000003
+          0.3333
         ],
         [
           0.67,
-          0.35710000000000003
+          0.3333
         ],
         [
           0.68,
-          0.35710000000000003
+          0.3333
         ],
         [
           0.69,
-          0.35710000000000003
+          0.3333
         ],
         [
           0.7,
-          0.35710000000000003
+          0.3333
         ],
         [
           0.71,
-          0.35710000000000003
+          0.3333
         ],
         [
           0.72,
-          0.35710000000000003
+          0.3333
         ],
         [
           0.73,
-          0.35710000000000003
+          0.3333
         ],
         [
           0.74,
-          0.35710000000000003
+          0.3333
         ],
         [
           0.75,
-          0.35710000000000003
+          0.3333
         ],
         [
           0.76,
-          0.35710000000000003
+          0.3333
         ],
         [
           0.77,
-          0.35710000000000003
+          0.3333
         ],
         [
           0.78,
-          0.35710000000000003
+          0.3333
         ],
         [
           0.79,
-          0.35710000000000003
+          0.3333
         ],
         [
           0.8,
-          0.35710000000000003
+          0.3333
         ],
         [
           0.81,
-          0.35710000000000003
+          0.3333
         ],
         [
           0.82,
-          0.35710000000000003
+          0.3333
         ],
         [
           0.83,
-          0.35710000000000003
+          0.3333
         ],
         [
           0.84,
-          0.35710000000000003
+          0.3333
         ],
         [
           0.85,
-          0.35710000000000003
+          0.3333
         ],
         [
           0.86,
-          0.35710000000000003
+          0.3333
         ],
         [
           0.87,
-          0.35710000000000003
+          0.3333
         ],
         [
           0.88,
-          0.35710000000000003
+          0.3333
         ],
         [
           0.89,
-          0.35710000000000003
+          0.3333
         ],
         [
           0.9,
-          0.35710000000000003
+          0.3333
         ],
         [
           0.91,
-          0.35710000000000003
+          0.3333
         ],
         [
           0.92,
-          0.35710000000000003
+          0.3333
         ],
         [
           0.93,
-          0.2857
+          0.2667
         ],
         [
           0.94,
-          0.2857
+          0.2667
         ],
         [
           0.95,
-          0.2857
+          0.2667
         ],
         [
           0.96,
-          0.2857
+          0.2667
         ],
         [
           0.97,
-          0.2857
+          0.2667
         ],
         [
           0.98,
-          0.2857
+          0.2667
         ],
         [
           0.99,
-          0.2857
+          0.2667
         ],
         [
           1.0,
-          0.2857
+          0.2667
         ]
       ],
-      "score": 1.0
+      "score": 0.844
     },
     {
       "video_id": "5BeLvrJd-Yw",
-      "age_days": 3,
+      "age_days": 4,
       "topic": "Why do artificial intelligence models consume enormous amounts of electric power?",
       "title": "Could AI Data Centers Dry Up Wells?",
       "features": {
@@ -452,7 +452,7 @@
           "hook_type": "stakes"
         }
       },
-      "views": 33,
+      "views": 34,
       "estimatedMinutesWatched": 2,
       "averageViewDuration": 9,
       "averageViewPercentage": 18.8,
@@ -462,11 +462,11 @@
       "subscribersGained": 0,
       "engagedViews": 9,
       "retention": [],
-      "score": 0.233
+      "score": 0.431
     },
     {
       "video_id": "QYHa4KCSXFk",
-      "age_days": 3,
+      "age_days": 4,
       "topic": "How do video games realistically simulate car crashes and physics?",
       "title": "Your Game Car Has Invisible Bones",
       "features": {
@@ -481,7 +481,7 @@
           "hook_type": "counterintuitive"
         }
       },
-      "views": 3,
+      "views": 4,
       "estimatedMinutesWatched": 0,
       "averageViewDuration": 21,
       "averageViewPercentage": 39.2,
@@ -491,11 +491,11 @@
       "subscribersGained": 0,
       "engagedViews": 1,
       "retention": [],
-      "score": 0.217
+      "score": 0.438
     },
     {
       "video_id": "qMSyWWvmUr4",
-      "age_days": 3,
+      "age_days": 4,
       "topic": "How do western disturbances trigger sudden winter rain and snowfall in Northern India?",
       "title": "Why Winter Rain Appears Out of Nowhere in North India",
       "features": {
@@ -510,17 +510,567 @@
           "hook_type": "stakes"
         }
       },
-      "views": 21,
-      "estimatedMinutesWatched": 3,
-      "averageViewDuration": 24,
-      "averageViewPercentage": 46.55,
+      "views": 22,
+      "estimatedMinutesWatched": 4,
+      "averageViewDuration": 25,
+      "averageViewPercentage": 48.77,
       "likes": 1,
       "shares": 0,
       "comments": 0,
       "subscribersGained": 0,
-      "engagedViews": 9,
+      "engagedViews": 10,
       "retention": [],
-      "score": 0.55
+      "score": 0.663
+    },
+    {
+      "video_id": "ME8luHOBffM",
+      "age_days": 3,
+      "topic": "How do console upgrades like PS5 Pro boost gaming performance?",
+      "title": "How PS5 Pro uses AI to boost game performance",
+      "features": {
+        "hook": "Your console is secretly lying to your eyes.",
+        "hook_type": "stakes",
+        "trend_source": "youtube",
+        "words": 136,
+        "duration_s": 50.95,
+        "voice": "en-IN-NeerjaNeural",
+        "music": "floating-cities.mp3",
+        "experiment": {
+          "hook_type": "stakes"
+        }
+      },
+      "views": 21,
+      "estimatedMinutesWatched": 3,
+      "averageViewDuration": 28,
+      "averageViewPercentage": 55.76,
+      "likes": 1,
+      "shares": 0,
+      "comments": 0,
+      "subscribersGained": 0,
+      "engagedViews": 8,
+      "retention": [],
+      "score": 0.7
+    },
+    {
+      "video_id": "d5VUTY6jOIc",
+      "age_days": 3,
+      "topic": "Why does heavy topspin cause a tennis ball to dip rapidly?",
+      "title": "Why Heavy Topspin Makes a Tennis Ball Plummet",
+      "features": {
+        "hook": "Your serve could lose the point",
+        "hook_type": "stakes",
+        "trend_source": "google_trends",
+        "words": 133,
+        "duration_s": 52.19,
+        "voice": "en-IN-NeerjaNeural",
+        "music": "investigations.mp3",
+        "experiment": {
+          "hook_type": "stakes"
+        }
+      },
+      "views": 134,
+      "estimatedMinutesWatched": 8,
+      "averageViewDuration": 12,
+      "averageViewPercentage": 24.46,
+      "likes": 3,
+      "shares": 0,
+      "comments": 0,
+      "subscribersGained": 0,
+      "engagedViews": 26,
+      "hook_hold": 1.0385,
+      "mid_hold": 0.15380000000000002,
+      "end_hold": 0.0385,
+      "biggest_drop_at": 0.1,
+      "retention": [
+        [
+          0.01,
+          1.0385
+        ],
+        [
+          0.02,
+          1.0385
+        ],
+        [
+          0.03,
+          1.0385
+        ],
+        [
+          0.04,
+          1.0385
+        ],
+        [
+          0.05,
+          1.0385
+        ],
+        [
+          0.06,
+          1.0
+        ],
+        [
+          0.07,
+          1.0
+        ],
+        [
+          0.08,
+          1.0
+        ],
+        [
+          0.09,
+          1.0
+        ],
+        [
+          0.1,
+          0.7692
+        ],
+        [
+          0.11,
+          0.6154
+        ],
+        [
+          0.12,
+          0.5769
+        ],
+        [
+          0.13,
+          0.5769
+        ],
+        [
+          0.14,
+          0.5385
+        ],
+        [
+          0.15,
+          0.5
+        ],
+        [
+          0.16,
+          0.46149999999999997
+        ],
+        [
+          0.17,
+          0.46149999999999997
+        ],
+        [
+          0.18,
+          0.46149999999999997
+        ],
+        [
+          0.19,
+          0.42310000000000003
+        ],
+        [
+          0.2,
+          0.42310000000000003
+        ],
+        [
+          0.21,
+          0.3846
+        ],
+        [
+          0.22,
+          0.3846
+        ],
+        [
+          0.23,
+          0.3077
+        ],
+        [
+          0.24,
+          0.2692
+        ],
+        [
+          0.25,
+          0.2692
+        ],
+        [
+          0.26,
+          0.1923
+        ],
+        [
+          0.27,
+          0.1923
+        ],
+        [
+          0.28,
+          0.15380000000000002
+        ],
+        [
+          0.29,
+          0.15380000000000002
+        ],
+        [
+          0.3,
+          0.15380000000000002
+        ],
+        [
+          0.31,
+          0.15380000000000002
+        ],
+        [
+          0.32,
+          0.15380000000000002
+        ],
+        [
+          0.33,
+          0.15380000000000002
+        ],
+        [
+          0.34,
+          0.15380000000000002
+        ],
+        [
+          0.35,
+          0.15380000000000002
+        ],
+        [
+          0.36,
+          0.15380000000000002
+        ],
+        [
+          0.37,
+          0.15380000000000002
+        ],
+        [
+          0.38,
+          0.15380000000000002
+        ],
+        [
+          0.39,
+          0.15380000000000002
+        ],
+        [
+          0.4,
+          0.15380000000000002
+        ],
+        [
+          0.41,
+          0.15380000000000002
+        ],
+        [
+          0.42,
+          0.15380000000000002
+        ],
+        [
+          0.43,
+          0.15380000000000002
+        ],
+        [
+          0.44,
+          0.15380000000000002
+        ],
+        [
+          0.45,
+          0.15380000000000002
+        ],
+        [
+          0.46,
+          0.15380000000000002
+        ],
+        [
+          0.47,
+          0.15380000000000002
+        ],
+        [
+          0.48,
+          0.15380000000000002
+        ],
+        [
+          0.49,
+          0.15380000000000002
+        ],
+        [
+          0.5,
+          0.15380000000000002
+        ],
+        [
+          0.51,
+          0.15380000000000002
+        ],
+        [
+          0.52,
+          0.15380000000000002
+        ],
+        [
+          0.53,
+          0.15380000000000002
+        ],
+        [
+          0.54,
+          0.15380000000000002
+        ],
+        [
+          0.55,
+          0.15380000000000002
+        ],
+        [
+          0.56,
+          0.15380000000000002
+        ],
+        [
+          0.57,
+          0.15380000000000002
+        ],
+        [
+          0.58,
+          0.15380000000000002
+        ],
+        [
+          0.59,
+          0.15380000000000002
+        ],
+        [
+          0.6,
+          0.15380000000000002
+        ],
+        [
+          0.61,
+          0.15380000000000002
+        ],
+        [
+          0.62,
+          0.15380000000000002
+        ],
+        [
+          0.63,
+          0.15380000000000002
+        ],
+        [
+          0.64,
+          0.15380000000000002
+        ],
+        [
+          0.65,
+          0.15380000000000002
+        ],
+        [
+          0.66,
+          0.15380000000000002
+        ],
+        [
+          0.67,
+          0.11539999999999999
+        ],
+        [
+          0.68,
+          0.11539999999999999
+        ],
+        [
+          0.69,
+          0.11539999999999999
+        ],
+        [
+          0.7,
+          0.11539999999999999
+        ],
+        [
+          0.71,
+          0.07690000000000001
+        ],
+        [
+          0.72,
+          0.07690000000000001
+        ],
+        [
+          0.73,
+          0.07690000000000001
+        ],
+        [
+          0.74,
+          0.07690000000000001
+        ],
+        [
+          0.75,
+          0.07690000000000001
+        ],
+        [
+          0.76,
+          0.07690000000000001
+        ],
+        [
+          0.77,
+          0.07690000000000001
+        ],
+        [
+          0.78,
+          0.07690000000000001
+        ],
+        [
+          0.79,
+          0.07690000000000001
+        ],
+        [
+          0.8,
+          0.07690000000000001
+        ],
+        [
+          0.81,
+          0.07690000000000001
+        ],
+        [
+          0.82,
+          0.07690000000000001
+        ],
+        [
+          0.83,
+          0.07690000000000001
+        ],
+        [
+          0.84,
+          0.0385
+        ],
+        [
+          0.85,
+          0.0385
+        ],
+        [
+          0.86,
+          0.0385
+        ],
+        [
+          0.87,
+          0.0385
+        ],
+        [
+          0.88,
+          0.0385
+        ],
+        [
+          0.89,
+          0.0385
+        ],
+        [
+          0.9,
+          0.0385
+        ],
+        [
+          0.91,
+          0.0385
+        ],
+        [
+          0.92,
+          0.0385
+        ],
+        [
+          0.93,
+          0.0385
+        ],
+        [
+          0.94,
+          0.0385
+        ],
+        [
+          0.95,
+          0.0385
+        ],
+        [
+          0.96,
+          0.0385
+        ],
+        [
+          0.97,
+          0.0385
+        ],
+        [
+          0.98,
+          0.0385
+        ],
+        [
+          0.99,
+          0.0385
+        ],
+        [
+          1.0,
+          0.0385
+        ]
+      ],
+      "score": 0.75
+    },
+    {
+      "video_id": "xjM6fPqGsXE",
+      "age_days": 3,
+      "topic": "How does Tesla's Cybertruck achieve its unique exoskeleton design?",
+      "title": "How Cybertruck’s Steel Skin Becomes an Exoskeleton",
+      "features": {
+        "hook": "This truck looks like a folded paper model.",
+        "hook_type": "counterintuitive",
+        "trend_source": "google_trends",
+        "words": 133,
+        "duration_s": 48.83,
+        "voice": "en-IN-NeerjaNeural",
+        "music": "inspired.mp3",
+        "experiment": {
+          "hook_type": "counterintuitive"
+        }
+      },
+      "views": 2,
+      "estimatedMinutesWatched": 0,
+      "averageViewDuration": 4,
+      "averageViewPercentage": 8.68,
+      "likes": 0,
+      "shares": 0,
+      "comments": 0,
+      "subscribersGained": 0,
+      "engagedViews": 1,
+      "retention": [],
+      "score": 0.2
+    },
+    {
+      "video_id": "qgLX8F_Bmz0",
+      "age_days": 3,
+      "topic": "How do games simulate massive physics interactions simultaneously?",
+      "title": "How Games Fake Massive Crashes Without Lag",
+      "features": {
+        "hook": "The train never actually hits those cars",
+        "hook_type": "counterintuitive",
+        "trend_source": "youtube",
+        "words": 135,
+        "duration_s": 50.03,
+        "voice": "en-IN-NeerjaNeural",
+        "music": "floating-cities.mp3",
+        "experiment": {
+          "hook_type": "counterintuitive"
+        }
+      },
+      "views": 1,
+      "estimatedMinutesWatched": 0,
+      "averageViewDuration": 0,
+      "averageViewPercentage": 0,
+      "likes": 0,
+      "shares": 0,
+      "comments": 0,
+      "subscribersGained": 0,
+      "engagedViews": 0,
+      "retention": [],
+      "score": 0.125
+    },
+    {
+      "video_id": "imUguEcHgHA",
+      "age_days": 3,
+      "topic": "How do game mods change game mechanics and assets?",
+      "title": "How One Mod Turns a Block Into a Gun",
+      "features": {
+        "hook": "A single block rewrites the game.",
+        "hook_type": "counterintuitive",
+        "trend_source": "youtube",
+        "words": 130,
+        "duration_s": 52.21,
+        "voice": "en-IN-NeerjaNeural",
+        "music": "floating-cities.mp3",
+        "experiment": {
+          "hook_type": "counterintuitive"
+        }
+      },
+      "views": 2,
+      "estimatedMinutesWatched": 0,
+      "averageViewDuration": 7,
+      "averageViewPercentage": 13.4,
+      "likes": 0,
+      "shares": 0,
+      "comments": 0,
+      "subscribersGained": 0,
+      "engagedViews": 1,
+      "retention": [],
+      "score": 0.35
     }
   ]
 }

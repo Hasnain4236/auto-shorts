@@ -2,15 +2,39 @@
   "arms": {
     "hook_type": {
       "stakes": {
-        "n": 3,
-        "mean": 0.594
+        "n": 5,
+        "mean": 0.678
       },
       "counterintuitive": {
-        "n": 1,
-        "mean": 0.217
+        "n": 4,
+        "mean": 0.278
       }
     }
   },
-  "updated": "2026-11-12T10:22:54+00:00",
-  "videos_analysed": 4
+  "updated": "2026-11-13T10:03:45+00:00",
+  "videos_analysed": 9,
+  "guidance": {
+    "summary": "Top-performing Shorts leverage clear stakes and direct viewer relevance paired with tangible, visual everyday topics like fireworks or PS5 hardware. Bottom-performing Shorts rely on abstract game-engine mechanics and weak metaphorical hooks that fail to retain viewers.",
+    "do": [
+      "Frame hooks using direct personal stakes or provocative claims (e.g., 'Your console is secretly lying to your eyes')",
+      "Focus script concepts on tangible, real-world visual phenomena or recognizable consumer hardware",
+      "Keep overall video duration tightly under 50 seconds to support retention percentages"
+    ],
+    "avoid": [
+      "Avoid abstract, metaphorical 'counterintuitive' hooks like 'looks like a folded paper model' or 'train never hits those cars'",
+      "Stop picking backend video game development mechanics (e.g., collision physics, modding engines) as standalone topics"
+    ],
+    "hook_guidance": [
+      "Prioritize 'stakes' over abstract facts; explicitly state how the topic directly impacts the viewer or the immediate outcome",
+      "State a direct, concrete reality in the first 3 seconds rather than a figurative comparison"
+    ],
+    "pacing_guidance": [
+      "Aim for 46–49 seconds total length, as the channel's top video was under 47s while 52s+ videos suffered lower view percentages"
+    ],
+    "topic_guidance": [
+      "Pick real-world physical events (fireworks, sports ball physics) and flagship consumer tech (PS5 Pro)",
+      "Avoid deep-dive game engine simulations that lack a strong real-world anchor"
+    ],
+    "confidence": "low"
+  }
 }
