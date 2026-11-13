@@ -697,5 +697,25 @@
         "hook_type": "question"
       }
     }
+  },
+  {
+    "ts": "2026-11-13T20:15:11+00:00",
+    "topic": "Why do apps sometimes fail on new streaming devices?",
+    "title": "Why new streaming devices can break apps",
+    "run_id": "2026-11-13_why-do-apps-sometimes-fail-on-new-streaming-device",
+    "youtube_id": "UjUoqQxemjc",
+    "publish_at": null,
+    "features": {
+      "hook": "Why does your new streaming box glitch?",
+      "hook_type": "question",
+      "trend_source": "google_trends",
+      "words": 135,
+      "duration_s": 47.94,
+      "voice": "en-IN-NeerjaNeural",
+      "music": "inspired.mp3",
+      "experiment": {
+        "hook_type": "question"
+      }
+    }
   }
 ]
