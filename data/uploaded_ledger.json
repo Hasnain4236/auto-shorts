@@ -737,5 +737,25 @@
         "hook_type": "question"
       }
     }
+  },
+  {
+    "ts": "2026-11-13T22:49:11+00:00",
+    "topic": "How does air traffic control prevent mid-air collisions?",
+    "title": "Why Planes Rarely Crash Into Each Other",
+    "run_id": "2026-11-13_how-does-air-traffic-control-prevent-mid-air-colli",
+    "youtube_id": "d-RdxMhUcj4",
+    "publish_at": null,
+    "features": {
+      "hook": "How do planes avoid crashing mid-air?",
+      "hook_type": "question",
+      "trend_source": "google_trends",
+      "words": 135,
+      "duration_s": 52.5,
+      "voice": "en-IN-NeerjaNeural",
+      "music": "wallpaper.mp3",
+      "experiment": {
+        "hook_type": "question"
+      }
+    }
   }
 ]
