@@ -797,5 +797,25 @@
         "hook_type": "question"
       }
     }
+  },
+  {
+    "ts": "2026-11-14T13:57:32+00:00",
+    "topic": "Why do butterfly wings show brilliant shiny colors without containing actual dye?",
+    "title": "How Butterfly Wings Shine Blue Without Any Dye",
+    "run_id": "2026-11-14_why-do-butterfly-wings-show-brilliant-shiny-colors",
+    "youtube_id": "U31mJH26law",
+    "publish_at": null,
+    "features": {
+      "hook": "How does a wing shine blue without dye?",
+      "hook_type": "question",
+      "trend_source": "youtube",
+      "words": 144,
+      "duration_s": 51.25,
+      "voice": "en-IN-NeerjaNeural",
+      "music": "floating-cities.mp3",
+      "experiment": {
+        "hook_type": "question"
+      }
+    }
   }
 ]
