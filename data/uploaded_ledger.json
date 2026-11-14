@@ -777,5 +777,25 @@
         "hook_type": "question"
       }
     }
+  },
+  {
+    "ts": "2026-11-14T11:55:20+00:00",
+    "topic": "How does E20 ethanol-blended petrol affect internal combustion engine performance?",
+    "title": "E20 petrol: why some engines struggle and others win",
+    "run_id": "2026-11-14_how-does-e20-ethanol-blended-petrol-affect-interna",
+    "youtube_id": "st7191pVH7A",
+    "publish_at": null,
+    "features": {
+      "hook": "Why does your bike sputter on new fuel?",
+      "hook_type": "question",
+      "trend_source": "google_trends",
+      "words": 135,
+      "duration_s": 46.19,
+      "voice": "en-IN-NeerjaNeural",
+      "music": "floating-cities.mp3",
+      "experiment": {
+        "hook_type": "question"
+      }
+    }
   }
 ]
