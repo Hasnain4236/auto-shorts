@@ -817,5 +817,25 @@
         "hook_type": "question"
       }
     }
+  },
+  {
+    "ts": "2026-11-14T15:35:04+00:00",
+    "topic": "Why do fast spinning car wheels appear to turn backwards in videos and games?",
+    "title": "Why Spinning Wheels Look Backwards on Screen",
+    "run_id": "2026-11-14_why-do-fast-spinning-car-wheels-appear-to-turn-bac",
+    "youtube_id": "pxTjwlKji6c",
+    "publish_at": null,
+    "features": {
+      "hook": "Why do wheels look like they reverse?",
+      "hook_type": "question",
+      "trend_source": "youtube",
+      "words": 156,
+      "duration_s": 52.79,
+      "voice": "en-IN-NeerjaNeural",
+      "music": "easy-lemon.mp3",
+      "experiment": {
+        "hook_type": "question"
+      }
+    }
   }
 ]
