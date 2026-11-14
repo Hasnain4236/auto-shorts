@@ -757,5 +757,25 @@
         "hook_type": "question"
       }
     }
+  },
+  {
+    "ts": "2026-11-14T09:33:38+00:00",
+    "topic": "How do VR headsets trick your brain into feeling real motion sickness?",
+    "title": "Why VR Headsets Make You Feel Sick",
+    "run_id": "2026-11-14_how-do-vr-headsets-trick-your-brain-into-feeling-r",
+    "youtube_id": "ugkxzCwGTac",
+    "publish_at": null,
+    "features": {
+      "hook": "Why does a headset make you queasy?",
+      "hook_type": "question",
+      "trend_source": "youtube",
+      "words": 156,
+      "duration_s": 54.53,
+      "voice": "en-IN-NeerjaNeural",
+      "music": "wallpaper.mp3",
+      "experiment": {
+        "hook_type": "question"
+      }
+    }
   }
 ]

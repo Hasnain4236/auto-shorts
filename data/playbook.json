@@ -2,38 +2,39 @@
   "arms": {
     "hook_type": {
       "stakes": {
-        "n": 5,
-        "mean": 0.678
+        "n": 7,
+        "mean": 0.622
       },
       "counterintuitive": {
-        "n": 4,
-        "mean": 0.278
+        "n": 9,
+        "mean": 0.405
       }
     }
   },
-  "updated": "2026-11-13T10:03:45+00:00",
-  "videos_analysed": 9,
+  "updated": "2026-11-14T09:28:30+00:00",
+  "videos_analysed": 16,
   "guidance": {
-    "summary": "Top-performing Shorts leverage clear stakes and direct viewer relevance paired with tangible, visual everyday topics like fireworks or PS5 hardware. Bottom-performing Shorts rely on abstract game-engine mechanics and weak metaphorical hooks that fail to retain viewers.",
+    "summary": "Top-performing videos focus on visible everyday phenomena, nature curiosities, and mainstream hardware, maintaining retention up to 57.87%. In contrast, bottom-performing videos struggle with abstract backend software operations, niche game mechanics, and vehicle engineering specs.",
     "do": [
-      "Frame hooks using direct personal stakes or provocative claims (e.g., 'Your console is secretly lying to your eyes')",
-      "Focus script concepts on tangible, real-world visual phenomena or recognizable consumer hardware",
-      "Keep overall video duration tightly under 50 seconds to support retention percentages"
+      "Focus scripts on tangible visual phenomena viewers can easily visualize, such as sunset light distortion or firework chemistry.",
+      "Frame hooks around direct, active stakes or startling visual claims (e.g., PS5 Pro lying to your eyes).",
+      "Keep explainers anchored to real-world impact rather than invisible background algorithms."
     ],
     "avoid": [
-      "Avoid abstract, metaphorical 'counterintuitive' hooks like 'looks like a folded paper model' or 'train never hits those cars'",
-      "Stop picking backend video game development mechanics (e.g., collision physics, modding engines) as standalone topics"
+      "Avoid covering back-end software architecture like game pre-loads, physics collision optimization, or open-source AI data processing.",
+      "Stop selecting abstract automotive spec topics like sedan fuel efficiency tricks or truck exoskeleton chassis design.",
+      "Avoid vague hooks about data streams that lack immediate personal relevance."
     ],
     "hook_guidance": [
-      "Prioritize 'stakes' over abstract facts; explicitly state how the topic directly impacts the viewer or the immediate outcome",
-      "State a direct, concrete reality in the first 3 seconds rather than a figurative comparison"
+      "Pair counterintuitive hooks with concrete, everyday sights (e.g., 'The sun you see is already set') rather than invisible tech processes.",
+      "Deliver the core stakes or curiosity gap within the first 5% to maintain initial viewer hold."
     ],
     "pacing_guidance": [
-      "Aim for 46–49 seconds total length, as the channel's top video was under 47s while 52s+ videos suffered lower view percentages"
+      "Target script length between 47 and 52 seconds, delivering the primary reveal early before the mid-point drop-off."
     ],
     "topic_guidance": [
-      "Pick real-world physical events (fireworks, sports ball physics) and flagship consumer tech (PS5 Pro)",
-      "Avoid deep-dive game engine simulations that lack a strong real-world anchor"
+      "Pick topics covering natural phenomena, weather mechanics, sports physics, and high-profile consumer hardware.",
+      "Skip niche game developer mechanics like asset modding, pre-load storage bloat, or haptic controller motors."
     ],
     "confidence": "low"
   }
